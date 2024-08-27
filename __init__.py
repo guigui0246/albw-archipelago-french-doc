@@ -144,8 +144,11 @@ class ALBWWorld(World):
                 #     location.progress_type = LocationProgressType.EXCLUDED
                 
                 # optionally exclude minigames
-                if loc_data.loctype == LocationType.Minigame and self.options.minigames_excluded:
-                    location.progress_type = LocationProgressType.EXCLUDED
+                if self.options.minigames_excluded:
+                    if loc_data.loctype == LocationType.Minigame:
+                        location.progress_type = LocationProgressType.EXCLUDED
+                    if loc_data.name == "[Mai] Hyrule Rupee Rush Wall" or loc_data.name == "[Mai] Lorule Rupee Rush Wall":
+                        location.progress_type = LocationProgressType.EXCLUDED
 
                 # place default item
                 item = self._get_location_item(loc_data)
