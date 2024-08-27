@@ -605,3 +605,15 @@ dungeon_item_excludes: List[str] = [
     "[TR] Left Balcony",
     "[LC] Zelda",
 ]
+
+starting_weapon_locations: List[str] = [
+    "Ravio's Gift",
+    "Ravio's Shop (1)",
+    "Ravio's Shop (2)",
+    "Ravio's Shop (3)",
+    "Ravio's Shop (4)",
+    "Ravio's Shop (5)",
+    "Ravio's Shop (7)",
+    "Ravio's Shop (8)",
+    "Ravio's Shop (9)",
+]
