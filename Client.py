@@ -42,6 +42,7 @@ class ALBWClientContext(CommonContext):
     COURSES_LOCATION: int = 0x70c8e0
     MINIGAME_LOCATION: int = 0x70d858
     GAME_LOCATION: int = 0x709df8
+    TASK_MAIN_GAME_VTABLE: int = 0x6d1db4
 
     def __init__(self, server_address: Optional[str], password: Optional[str]):
         super().__init__(server_address, password)
@@ -141,6 +142,19 @@ class ALBWClientContext(CommonContext):
             return False
         return True
 
+    def is_in_game(self) -> bool:
+        framework = self.citra.read_u32(self.AP_HEADER_LOCATION + 0x54)
+        task_mgr = self.citra.read_u32(framework + 0x1c)
+        start_node = task_mgr + 0x44
+        node = self.citra.read_u32(start_node + 4)
+        while node != start_node:
+            task = self.citra.read_u32(node + 8)
+            task_vtable = self.citra.read_u32(task)
+            if task_vtable == self.TASK_MAIN_GAME_VTABLE:
+                return True
+            node = self.citra.read_u32(node + 4)
+        return False
+
     def read_flags(self) -> None:
         cur_event_flags = self.citra.read(self.event_flags_ptr + 0x48, 0x80)
         save_event_flags = self.citra.read(self.save_ptr + 0x40, 0x80)
@@ -219,6 +233,9 @@ class ALBWClientContext(CommonContext):
             item_id = item_code_table[item_code].progress[0].item_id()
             assert item_id is not None
             self.citra.write_u32(self.AP_HEADER_LOCATION + 0xc, item_id)
+    
+    def get_null_item(self) -> None:
+        self.citra.write_u32(self.AP_HEADER_LOCATION + 0xc, 0xffffffff)
 
 async def game_watcher(ctx: ALBWClientContext) -> None:
     while not ctx.exit_event.is_set():
@@ -230,11 +247,13 @@ async def game_watcher(ctx: ALBWClientContext) -> None:
                 ctx.validate_rom()
                 if not ctx.invalid:
                     ctx.validate_seed()
-                if not ctx.invalid:
+                if not ctx.invalid and ctx.is_in_game():
                     ctx.validate_save()
-                if not ctx.invalid and ctx.get_pointers() and ctx.server_connected:
-                    await ctx.check_locations()
-                    ctx.get_item()
+                    if not ctx.invalid and ctx.get_pointers() and ctx.server_connected:
+                        await ctx.check_locations()
+                        ctx.get_item()
+                else:
+                    ctx.get_null_item()
         except CitraException as e:
             logger.error(e)
             ctx.citra_connected = False
