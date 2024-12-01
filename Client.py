@@ -76,8 +76,9 @@ class ALBWClientContext(CommonContext):
             logger.info("Connecting to emulator...")
         self.show_citra_connect_message = False
         self.citra_connected = False
-        if self.citra.connect():
+        if not self.citra.connect():
             await asyncio.sleep(1)
+        else:
             self.citra_connected = True
             if self.server_connected:
                 logger.info("Emulator connected")
@@ -144,6 +145,8 @@ class ALBWClientContext(CommonContext):
 
     def is_in_game(self) -> bool:
         framework = self.citra.read_u32(self.AP_HEADER_LOCATION + 0x54)
+        if framework == 0:
+            return False
         task_mgr = self.citra.read_u32(framework + 0x1c)
         start_node = task_mgr + 0x44
         node = self.citra.read_u32(start_node + 4)
@@ -247,13 +250,14 @@ async def game_watcher(ctx: ALBWClientContext) -> None:
                 ctx.validate_rom()
                 if not ctx.invalid:
                     ctx.validate_seed()
-                if not ctx.invalid and ctx.is_in_game():
-                    ctx.validate_save()
-                    if not ctx.invalid and ctx.get_pointers() and ctx.server_connected:
-                        await ctx.check_locations()
-                        ctx.get_item()
-                else:
-                    ctx.get_null_item()
+                if not ctx.invalid:
+                    if ctx.is_in_game():
+                        ctx.validate_save()
+                        if not ctx.invalid and ctx.get_pointers() and ctx.server_connected:
+                            await ctx.check_locations()
+                            ctx.get_item()
+                    else:
+                        ctx.get_null_item()
         except CitraException as e:
             logger.error(e)
             ctx.citra_connected = False
