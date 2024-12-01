@@ -111,8 +111,9 @@ class ALBWClientContext(CommonContext):
             logger.info("Connecting to emulator...")
         self.show_citra_connect_message = False
         self.interface_connected = False
-        if self.interface and await self.interface.connect():
+        if not await self.interface.connect():
             await asyncio.sleep(1)
+        else:
             self.interface_connected = True
             self.initial_delay = True
             if self.server_connected:
@@ -180,6 +181,8 @@ class ALBWClientContext(CommonContext):
 
     async def is_in_game(self) -> bool:
         framework = await self.interface.read_u32(self.AP_HEADER_LOCATION + 0x54)
+        if framework == 0:
+            return False
         task_mgr = await self.interface.read_u32(framework + 0x1c)
         start_node = task_mgr + 0x44
         node = await self.interface.read_u32(start_node + 4)
@@ -316,18 +319,19 @@ async def game_watcher(ctx: ALBWClientContext) -> None:
                 await ctx.validate_rom()
                 if not ctx.invalid:
                     await ctx.validate_seed()
-                if not ctx.invalid and ctx.is_in_game():
-                    await ctx.validate_save()
-                    if triple_addr == "" and ctx.interface == triple:
-                        ctx.interface_connected = False
-                        triple.disconnect()
-                    if not ctx.invalid and ctx.server_connected and (await ctx.get_pointers()):
-                        await ctx.check_locations()
-                        await ctx.get_item()
+                if not ctx.invalid:
+                    if ctx.is_in_game():
+                        await ctx.validate_save()
+                        if triple_addr == "" and ctx.interface == triple:
+                            ctx.interface_connected = False
+                            triple.disconnect()
+                        if not ctx.invalid and ctx.server_connected and (await ctx.get_pointers()):
+                            await ctx.check_locations()
+                            await ctx.get_item()
+                        else:
+                            ctx.initial_delay = True
                     else:
-                        ctx.initial_delay = True
-                else:
-                    await ctx.get_null_item()
+                        await ctx.get_null_item()
         except CitraException as e:
             logger.error(e)
             logger.error(traceback.format_exc())
