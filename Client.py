@@ -69,7 +69,7 @@ class ALBWClientContext(CommonContext):
     show_citra_connect_message: bool
     show_triple_connected_message: bool
 
-    DATA_VERSION: int = 1
+    DATA_VERSION: int = 2
     AP_HEADER_LOCATION: int = 0x6fe5f8
     SAVES_LOCATION: int = 0x711de8
     EVENTS_LOCATION: int = 0x70b728

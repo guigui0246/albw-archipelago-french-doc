@@ -1,7 +1,7 @@
 import os
 import pickle
 from typing import ClassVar, Dict, List, Optional, Sequence, Tuple
-from ..AutoWorld import WebWorld, World
+from worlds.AutoWorld import WebWorld, World
 from BaseClasses import CollectionState, Item, ItemClassification, Location, LocationProgressType, MultiWorld, \
     Region, Tutorial
 from Fill import fill_restrictive, sweep_from_pool
