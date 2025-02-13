@@ -9,7 +9,15 @@ from Utils import Version
 from settings import get_settings
 from .Items import item_table, APItem
 from .Options import ALBWOptions, create_randomizer_settings
-from albwrandomizer import ArchipelagoInfo, logging_on, randomize_pre_fill
+from albwrandomizer import ArchipelagoItem, ArchipelagoInfo, logging_on, randomize_pre_fill
+
+class PatchItemInfo:
+    name: str
+    classification: int
+
+    def __init__(self, name: str, classification: int):
+        self.name = name
+        self.classification = classification
 
 class PatchInfo:
     version: Version
@@ -17,7 +25,7 @@ class PatchInfo:
     player_name: str
     options: ALBWOptions
     check_map: Dict[str, str]
-    item_names: Dict[str, str]
+    items: Dict[str, PatchItemInfo]
 
     version: ClassVar[Version] = Version(0, 1, 2)
     min_compatible_version: ClassVar[Version] = Version(0, 1, 0)
@@ -29,14 +37,14 @@ class PatchInfo:
         player_name: str,
         options: ALBWOptions,
         check_map: Dict[str, str],
-        item_names: Dict[str, str],
+        items: Dict[str, str],
     ):
         self.version = version
         self.seed = seed
         self.player_name = player_name
         self.options = options
         self.check_map = check_map
-        self.item_names = item_names
+        self.items = items
 
 class ALBWProcedurePatch(APProcedurePatch):
     game: str = "A Link Between Worlds"
@@ -75,7 +83,8 @@ class ALBWPatchExtension(metaclass=AutoPatchExtensionRegister):
         # Load Archipelago info from the patch info
         archipelago_info = ArchipelagoInfo()
         archipelago_info.name = patch_info.player_name
-        archipelago_info.item_names = patch_info.item_names
+        archipelago_info.items = {loc_name: ArchipelagoItem(item.name, item.classification)
+                                    for loc_name, item in patch_info.items.items()}
 
         # Initialize seed info from the patch info
         settings = create_randomizer_settings(patch_info.options)

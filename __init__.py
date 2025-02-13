@@ -14,7 +14,7 @@ from .Locations import ALBWLocation, LocationData, LocationType, all_locations, 
     dungeon_item_excludes, starting_weapon_locations
 from .Options import ALBWOptions, CrackShuffle, InitialCrackState, Keysy, LogicMode, NiceItems, WeatherVanes, \
     create_randomizer_settings
-from .Patch import PatchInfo, ALBWProcedurePatch
+from .Patch import PatchInfo, PatchItemInfo, ALBWProcedurePatch
 from albwrandomizer import ArchipelagoInfo, PyRandomizable, SeedInfo, randomize_pre_fill
 
 albw_base_id = 6242624000
@@ -235,8 +235,9 @@ class ALBWWorld(World):
     def generate_output(self, output_directory: str) -> None:
         # Create patch info object
         check_map = self._build_check_map()
-        item_names = {loc.name: loc.item.name for loc in self.multiworld.get_locations(self.player)}
-        patch_info = PatchInfo(PatchInfo.version, self.seed, self.player_name, self.options, check_map, item_names)
+        items = {loc.name: PatchItemInfo(loc.item.name, loc.item.classification.as_flag())
+                        for loc in self.multiworld.get_locations(self.player)}
+        patch_info = PatchInfo(PatchInfo.version, self.seed, self.player_name, self.options, check_map, items)
 
         # Write patch info to binary file
         patch = ALBWProcedurePatch(player=self.player, player_name=self.player_name)
