@@ -1,6 +1,6 @@
 import os
 import pickle
-from typing import ClassVar, Dict, List, Optional, Sequence, Tuple
+from typing import Any, ClassVar, Dict, List, Optional, Sequence, Tuple
 from worlds.AutoWorld import WebWorld, World
 from BaseClasses import CollectionState, Item, ItemClassification, Location, LocationProgressType, MultiWorld, \
     Region, Tutorial
@@ -230,8 +230,27 @@ class ALBWWorld(World):
             starting_weapon_itempool = [item for item in self.pre_fill_items if item.name == self.starting_weapon.name]
             self._initial_fill(starting_weapon_itempool, starting_weapon_locations)
     
-    def fill_slot_data(self) -> None:
-        return {"seed": self.seed}
+    def fill_slot_data(self) -> Dict[str, Any]:
+        slot_data = self.options.as_dict(
+            "logic_mode",
+            "lorule_castle_requirement",
+            "pedestal_requirement",
+            "nice_items",
+            "lamp_and_net_as_weapons",
+            "no_progression_enemies",
+            "maiamai_mayhem",
+            "initial_crack_state",
+            "crack_shuffle",
+            "minigames_excluded",
+            "trials_required",
+            "open_trials_door",
+            "weather_vanes",
+            "dark_rooms_lampless",
+            "swordless_mode",
+            "chest_size_matches_contents",
+        )
+        slot_data["seed"] = self.seed
+        return slot_data
 
     def generate_output(self, output_directory: str) -> None:
         # Create patch info object
