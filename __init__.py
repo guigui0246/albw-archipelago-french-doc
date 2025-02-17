@@ -28,7 +28,8 @@ components.append(
         "A Link Between Worlds Client",
         func=launch_client,
         component_type=Type.CLIENT,
-        file_identifier=SuffixIdentifier(".apalbw")
+        file_identifier=SuffixIdentifier(".apalbw"),
+        cli=True,
     )
 )
 
