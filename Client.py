@@ -157,12 +157,14 @@ class ALBWClientContext(CommonContext):
         task_mgr = self.citra.read_u32(framework + 0x1c)
         start_node = task_mgr + 0x44
         node = self.citra.read_u32(start_node + 4)
-        while node != start_node:
+        loop_count = 0
+        while node != start_node and loop_count < 100:
             task = self.citra.read_u32(node + 8)
             task_vtable = self.citra.read_u32(task)
             if task_vtable == self.TASK_MAIN_GAME_VTABLE:
                 return True
             node = self.citra.read_u32(node + 4)
+            loop_count += 1
         return False
 
     def read_flags(self) -> None:
