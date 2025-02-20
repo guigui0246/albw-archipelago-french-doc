@@ -15,7 +15,7 @@ from .Locations import ALBWLocation, LocationData, LocationType, all_locations, 
 from .Options import ALBWOptions, CrackShuffle, InitialCrackState, Keysy, LogicMode, NiceItems, WeatherVanes, \
     create_randomizer_settings
 from .Patch import PatchInfo, PatchItemInfo, ALBWProcedurePatch
-from albwrandomizer import ArchipelagoInfo, PyRandomizable, SeedInfo, randomize_pre_fill
+from albwrandomizer import ArchipelagoInfo, Cracksanity, PyRandomizable, SeedInfo, randomize_pre_fill
 
 albw_base_id = 6242624000
 
@@ -100,11 +100,19 @@ class ALBWWorld(World):
         return self.random.choice(filler_items)
     
     def generate_early(self) -> None:
-        self.seed = self.random.randrange(2**32)
         settings = create_randomizer_settings(self.options)
         archipelago_info = ArchipelagoInfo()
         archipelago_info.name = self.player_name
-        self.seed_info = randomize_pre_fill(self.seed, settings, archipelago_info)
+        max_tries = 20
+        for num_tries in range(max_tries + 1):
+            if num_tries == max_tries:
+                print(f"Too many attempts to generate world graph for player {self.player_name}. Turning off Crack Shuffle.")
+                self.options.crack_shuffle.value = CrackShuffle.option_off
+                settings.cracksanity = Cracksanity.Off
+            self.seed = self.random.randrange(2**32)
+            self.seed_info = randomize_pre_fill(self.seed, settings, archipelago_info)
+            if self.seed_info.access_check():
+                break
 
         # add starting weather vanes
         starting_vanes = []

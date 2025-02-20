@@ -269,8 +269,6 @@ def create_randomizer_settings(options: ALBWOptions) -> albwrandomizer.Settings:
         settings.cracksanity = albwrandomizer.Cracksanity.MirroredCrossWorldPairs
     elif options.crack_shuffle == CrackShuffle.option_mirrored_any_world_pairs:
         settings.cracksanity = albwrandomizer.Cracksanity.MirroredAnyWorldPairs
-    #TODO remove once crack shuffle is fixed
-    settings.cracksanity = albwrandomizer.Cracksanity.Off
     
     if options.weather_vanes == WeatherVanes.option_standard:
         settings.weather_vanes = albwrandomizer.WeatherVanes.Standard
