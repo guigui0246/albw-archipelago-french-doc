@@ -195,8 +195,8 @@ class ALBWClientContext(CommonContext):
         return False
 
     async def read_flags(self) -> None:
-        cur_event_flags = self.citra.read(self.event_flags_ptr + 0x48, 0x80)
-        save_event_flags = self.citra.read(self.save_ptr + 0x40, 0x80)
+        cur_event_flags = await self.interface.read(self.event_flags_ptr + 0x48, 0x80)
+        save_event_flags = await self.interface.read(self.save_ptr + 0x40, 0x80)
         self.event_flags = bytes_or(cur_event_flags, save_event_flags)
 
         cur_minigame_flags = (await self.interface.read(self.minigame_ptr + 0x35, 1))[0]
@@ -320,7 +320,7 @@ async def game_watcher(ctx: ALBWClientContext) -> None:
                 if not ctx.invalid:
                     await ctx.validate_seed()
                 if not ctx.invalid:
-                    if ctx.is_in_game():
+                    if await ctx.is_in_game():
                         await ctx.validate_save()
                         if triple_addr == "" and ctx.interface == triple:
                             ctx.interface_connected = False
