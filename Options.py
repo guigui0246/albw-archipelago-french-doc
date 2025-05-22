@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Dict
 from Options import PerGameCommonOptions, Choice, Range, Toggle
 import albwrandomizer
 
@@ -174,7 +175,7 @@ class Keysy(Choice):
     option_all = 3
 
 @dataclass
-class ALBWOptions(PerGameCommonOptions):
+class ALBWSpecificOptions:
     logic_mode: LogicMode
     randomize_dungeon_prizes: RandomizeDungeonPrizes
     lorule_castle_requirement: LoruleCastleRequirement
@@ -200,7 +201,11 @@ class ALBWOptions(PerGameCommonOptions):
     purple_potion_bottles: PurplePotionBottles
     keysy: Keysy
 
-def create_randomizer_settings(options: ALBWOptions) -> albwrandomizer.Settings:
+@dataclass
+class ALBWOptions(PerGameCommonOptions, ALBWSpecificOptions):
+    pass
+
+def create_randomizer_settings(options: ALBWSpecificOptions) -> albwrandomizer.Settings:
     settings = albwrandomizer.Settings()
 
     settings.dev_mode = False

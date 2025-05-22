@@ -1,5 +1,5 @@
 import os
-import pickle
+import orjson
 from typing import Any, ClassVar, Dict, List, Optional, Sequence, Tuple
 from worlds.AutoWorld import WebWorld, World
 from BaseClasses import CollectionState, Item, ItemClassification, Location, LocationProgressType, MultiWorld, \
@@ -265,11 +265,12 @@ class ALBWWorld(World):
         check_map = self._build_check_map()
         items = {loc.name: PatchItemInfo(loc.item.name, loc.item.classification.as_flag())
                         for loc in self.multiworld.get_locations(self.player)}
-        patch_info = PatchInfo(PatchInfo.version, self.seed, self.player_name, self.options, check_map, items)
+        patch_info = PatchInfo(PatchInfo.cur_version.as_simple_string(), self.seed, self.player_name,
+                               self.options, check_map, items)
 
-        # Write patch info to binary file
+        # Write patch info to json file
         patch = ALBWProcedurePatch(player=self.player, player_name=self.player_name)
-        patch.write_file("patch_info.bin", pickle.dumps(patch_info))
+        patch.write_file("patch_info.json", patch_info.to_json())
 
         # Write patch file
         out_file_name = self.multiworld.get_out_file_name_base(self.player)
