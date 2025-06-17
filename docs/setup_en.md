@@ -15,6 +15,7 @@
  - If you already have an `albwrandomizer` *file* in your `lib` folder from a previous version, remove it.
  - If running from source, place the `albwrandomizer` folder in your `Archipelago` folder instead.
 4. In the emulator, select `File > Open Azahar Folder`. Create a `load` folder inside this folder, and inside the `load` folder create a `mods` folder.
+5. Also in the emulator, select `Emulation > Configure`. Then, in the general section, on the top, select `Debug`. Finally, at the bottom, ensure that the `Enable RPC Server` option is enabled.
 
 ## Generating a Game
 
