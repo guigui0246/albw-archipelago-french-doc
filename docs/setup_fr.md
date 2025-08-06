@@ -31,11 +31,11 @@
 2. Entrer le chemin vers votre ROM A Link Between Worlds (première fois uniquement, il est sauvegardé dans `Archipelago/host.yaml`). Attendre environ 20 seconds pour que le jeu soit patché.
 3. Celà fera 2 choses. D'abord ouvrir le client A Link Between World et ensuite créer un fichier zip dans le même dossier que le patch et avec le même nom. Dézipper ce fichier pour récupérer le dossier `00040000000EC300` dedans.
 4. Mettre le dossier `00040000000EC300` dans le dossier `load/mods/` créé à l'installation. (Si il y a déjà un dossier avec le même nom dedans supprimer, déplacer ou renommer l'ancien avant de mettre le nouveau.)
-5. Éxécuter A Link Between Worlds dans l'émulateur. Le client devrait se connecter automatiquement à l'émulateur (sinon fermer tout puis se référer à #Continuer une partie).
+5. Éxécuter A Link Between Worlds dans l'émulateur. Le client devrait se connecter automatiquement à l'émulateur (sinon fermer tout puis se référer à [Continuer une partie](#continuer-une-partie)).
 6. Entrer l'URL du serveur hébergant la partie dans le client et appuyer sur `Connect`.
 
 ## Continuer une partie
 
 1. Éxécuter A Link Between Worlds dans l'émulateur.
-2. Éxécuter le launcher d'Archipelago et selectionner le client A Link Between Worlds. Le client devrait se connecter automatiquement à l'émulateur. Si ça ne fonctionne pas, verifiez les étapes de #Installation.
+2. Éxécuter le launcher d'Archipelago et selectionner le client A Link Between Worlds. Le client devrait se connecter automatiquement à l'émulateur. Si ça ne fonctionne pas, verifiez les étapes d'[Installation](#installation).
 3. Entrer l'URL du serveur hébergant la partie dans le client et appuyer sur `Connect`.
