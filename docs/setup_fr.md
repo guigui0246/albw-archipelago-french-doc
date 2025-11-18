@@ -3,7 +3,7 @@
 ## Software Nécessaire
 
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases).
-- Une ROM décryptée de A Link Between Worlds d'Amérique du Nord en `.3ds`. Les instructions pour dump la ROM peuvent être trouvées (en anglais) [ici](https://wiki.hacks.guide/wiki/3DS:Dump_titles_and_game_cartridges). **Faîtes bien attention à selectionner "decrypt" lors du dump.** Si vous avez un fichier en `.cci` renommez le juste en `.3ds` et si vous avez un fichier en `.cia` utilisez [makerom.exe packagé dans ctrtool](https://github.com/3DSGuy/Project_CTR/releases/tag/ctrtool-v1.2.1) ou ce [script](https://github.com/davFaithid/CIA-to-3DS-Rom-Converter/releases)
+- Une ROM décryptée de A Link Between Worlds d'Amérique du Nord en `.3ds`. Les instructions pour dump la ROM peuvent être trouvées (en anglais) [ici](https://wiki.hacks.guide/wiki/3DS:Dump_titles_and_game_cartridges). **Faîtes bien attention à selectionner "decrypt" lors du dump.** Si vous avez un fichier en `.cci` renommez le juste en `.3ds` et si vous avez un fichier en `.cia` utilisez [makerom.exe packagé dans ctrtool](https://github.com/3DSGuy/Project_CTR/releases) ou ce [script](https://github.com/davFaithid/CIA-to-3DS-Rom-Converter/releases)
 - [Azahar](https://azahar-emu.org/pages/download/) (ou une archive [Lime3DS](https://github.com/Lime3DS/lime3ds-archive) ou [Citra](https://github.com/PabloMK7/citra/releases)). Note: Si vous utilisez l'émulateur Azahar, renommer le fichier de ROM de `.3ds` à `.cci` pour qu'il soit accepté par l'émulateur. Ces fichiers sont identiques, c'est juste l'extension qui change.
 - **Le jeu doit être joué en langue ANGLAISE.** *RIP le français. 😞* (si vous le faîtes pas vous allez casser le jeu et softlock)
 
