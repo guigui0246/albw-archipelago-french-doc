@@ -33,7 +33,7 @@ class PatchInfo:
     check_map: Dict[str, str]
     items: Dict[str, PatchItemInfo]
 
-    cur_version: ClassVar[Version] = Version(0, 1, 3)
+    cur_version: ClassVar[Version] = Version(0, 1, 4)
     min_compatible_version: ClassVar[Version] = Version(0, 1, 3)
 
     def __init__(

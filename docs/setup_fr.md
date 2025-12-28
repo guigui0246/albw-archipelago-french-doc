@@ -11,11 +11,8 @@
 
 1. Installer la dernière version d'Archipelago.
 2. Télécharger `albw.apworld` et le mettre dans le dossier `Archipelago/custom_worlds/` (double-cliquer dessus devrais aussi fonctionner).
-3. Télécharger et dézipper `albwrandomizer.zip`. Metter le dossier `albwrandomizer` dans le dossier `Archipelago/lib/`.
- - Si il y a déjà un fichier ou dossier `albwrandomizer` dans le dossier `lib` restant d'une version précédante, supprimer l'ancienne version.
- - Si vous compilez depuis le code source, mettre le dossier `albwrandomizer` dans le dossier `Archipelago` à la place.
-4. Dans l'emulateur, sélectionner `Fichier > Ouvrier dossier <nom de l'émulateur>` (ou `File > Open <émulateur> Folder` en anglais). Créer un dossier `load` dans le dossier de l'émulateur et un dossier `mods` dans le dossier `load`.
-5. (Pour les utilisateurs de Azahar uniquement): Sélectionner `Émulation > Configuration` (ou `Emulation > Configure` en anglais). Puis sélectionner l'onglet `Debug` et tout en bas cochez (si c'est pas dajà fait) l'option `Activer le serveur RPC` (ou `Enable RPC Server` en anglais).
+3. Dans l'emulateur, sélectionner `Fichier > Ouvrier dossier <nom de l'émulateur>` (ou `File > Open <émulateur> Folder` en anglais). Créer un dossier `load` dans le dossier de l'émulateur et un dossier `mods` dans le dossier `load`.
+4. (Pour les utilisateurs de Azahar uniquement): Sélectionner `Émulation > Configuration` (ou `Emulation > Configure` en anglais). Puis sélectionner l'onglet `Debug` et tout en bas cochez (si c'est pas dajà fait) l'option `Activer le serveur RPC` (ou `Enable RPC Server` en anglais).
 
 ## Mise à jour
 
