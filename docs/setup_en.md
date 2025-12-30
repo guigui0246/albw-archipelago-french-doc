@@ -3,7 +3,7 @@
 ## Required Software
 
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases).
-- A decrypted, North American A Link Between Worlds `.3ds` until 0.1.3 and `.cci` since 0.1.4 ROM. Instructions for dumping your ROM can be found [here](https://wiki.hacks.guide/wiki/3DS:Dump_titles_and_game_cartridges). **Make sure to select "decrypt" when dumping.** Note: for use with the Azahar emulator (below), rename you'll need a `.cci` ROM, you can rename a `.3ds` ROM. These files are identical, only the extension is different.
+- A decrypted, North American A Link Between Worlds `.3ds` until 0.1.3 and `.cci` or `.3ds` since 0.1.4 ROM. Instructions for dumping your ROM can be found [here](https://wiki.hacks.guide/wiki/3DS:Dump_titles_and_game_cartridges). **Make sure to select "decrypt" when dumping.** Note: for use with the Azahar emulator (below), rename you'll need a `.cci` ROM, you can rename a `.3ds` ROM. These files are identical, only the extension is different.
 - [Azahar](https://azahar-emu.org/pages/download/)
 - **The game must be played with the language set to English.**
 
