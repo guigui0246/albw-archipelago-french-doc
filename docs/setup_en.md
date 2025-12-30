@@ -12,7 +12,8 @@
 1. Install the latest version of Archipelago.
 2. Download `albw.apworld` and put it in your `Archipelago/custom_worlds/` folder.
 3. **For versions 0.1.3 and earlier only**: Download and unzip `albwrandomizer.zip`. Place the `albwrandomizer` folder inside the `Archipelago/lib/` folder.
-4. Also in the emulator, select `Emulation > Configure`. Then, in the general section, on the top, select `Debug`. Finally, at the bottom, ensure that the `Enable RPC Server` option is enabled.
+4. In the emulator, select `File > Open Azahar Folder`. Create a `load` folder inside this folder, and inside the `load` folder create a `mods` folder.
+5. Also in the emulator, select `Emulation > Configure`. Then, in the general section, on the top, select `Debug`. Finally, at the bottom, ensure that the `Enable RPC Server` option is enabled.
 
 # Updating
 1. **Up to and including 0.1.3**: Delete the albwrandomizer folder from the `Archipelago/lib/` folder.
