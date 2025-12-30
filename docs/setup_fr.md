@@ -3,21 +3,24 @@
 ## Software Nécessaire
 
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases).
-- Une ROM décryptée de A Link Between Worlds d'Amérique du Nord en `.3ds`. Les instructions pour dump la ROM peuvent être trouvées (en anglais) [ici](https://wiki.hacks.guide/wiki/3DS:Dump_titles_and_game_cartridges). **Faîtes bien attention à selectionner "decrypt" lors du dump.** Si vous avez un fichier en `.cci` renommez le juste en `.3ds` et si vous avez un fichier en `.cia` utilisez [makerom.exe packagé dans ctrtool (attention installez makerom pas ctrtool)](https://github.com/3DSGuy/Project_CTR/releases) ou ce [script](https://github.com/davFaithid/CIA-to-3DS-Rom-Converter/releases)
-- [Azahar](https://azahar-emu.org/pages/download/) (ou une archive [Lime3DS](https://github.com/Lime3DS/lime3ds-archive) ou [Citra](https://github.com/PabloMK7/citra/releases)). Note: Si vous utilisez l'émulateur Azahar, renommer le fichier de ROM de `.3ds` à `.cci` pour qu'il soit accepté par l'émulateur. Ces fichiers sont identiques, c'est juste l'extension qui change.
+- Une ROM décryptée de A Link Between Worlds d'Amérique du Nord en `.3ds` jusqu'à la 0.1.3 et `.cci` à partir de la 0.1.4. Les instructions pour dump la ROM peuvent être trouvées (en anglais) [ici](https://wiki.hacks.guide/wiki/3DS:Dump_titles_and_game_cartridges). **Faîtes bien attention à selectionner "decrypt" lors du dump.** Si vous avez un fichier en `.cci` ou `.3ds` renommez le juste au format voulu et si vous avez un fichier en `.cia` utilisez [makerom.exe packagé dans ctrtool (attention installez makerom pas ctrtool)](https://github.com/3DSGuy/Project_CTR/releases) ou ce [script](https://github.com/davFaithid/CIA-to-3DS-Rom-Converter/releases)
+- [Azahar](https://azahar-emu.org/pages/download/) (ou une archive [Lime3DS](https://github.com/Lime3DS/lime3ds-archive) ou [Citra](https://github.com/PabloMK7/citra/releases)). Note: Si vous utilisez l'émulateur Azahar, le fichier de ROM doit être en `.cci` et sinon en `.3ds` pour qu'il soit accepté par l'émulateur. Ces fichiers sont identiques, c'est juste l'extension qui change.
 - **Le jeu doit être joué en langue ANGLAISE.** *RIP le français. 😞* (si vous le faîtes pas vous allez casser le jeu et softlock)
 
 ## Installation
 
 1. Installer la dernière version d'Archipelago.
 2. Télécharger `albw.apworld` et le mettre dans le dossier `Archipelago/custom_worlds/` (double-cliquer dessus devrais aussi fonctionner).
-3. Dans l'emulateur, sélectionner `Fichier > Ouvrier dossier <nom de l'émulateur>` (ou `File > Open <émulateur> Folder` en anglais). Créer un dossier `load` dans le dossier de l'émulateur et un dossier `mods` dans le dossier `load`.
-4. (Pour les utilisateurs de Azahar uniquement): Sélectionner `Émulation > Configuration` (ou `Emulation > Configure` en anglais). Puis sélectionner l'onglet `Debug` et tout en bas cochez (si c'est pas dajà fait) l'option `Activer le serveur RPC` (ou `Enable RPC Server` en anglais).
+3. **Version 0.1.3 et précédentes uniquement**: Télécharger et dézipper `albwrandomizer.zip`. Metter le dossier `albwrandomizer` dans le dossier `Archipelago/lib/`.
+ - Si il y a déjà un fichier ou dossier `albwrandomizer` dans le dossier `lib` restant d'une version précédante, supprimer l'ancienne version.
+ - Si vous compilez depuis le code source, mettre le dossier `albwrandomizer` dans le dossier `Archipelago` à la place.
+4. Dans l'emulateur, sélectionner `Fichier > Ouvrier dossier <nom de l'émulateur>` (ou `File > Open <émulateur> Folder` en anglais). Créer un dossier `load` dans le dossier de l'émulateur et un dossier `mods` dans le dossier `load`.
+5. **Pour les utilisateurs de Azahar uniquement**: Sélectionner `Émulation > Configuration` (ou `Emulation > Configure` en anglais). Puis sélectionner l'onglet `Debug` et tout en bas cochez (si c'est pas dajà fait) l'option `Activer le serveur RPC` (ou `Enable RPC Server` en anglais).
 
 ## Mise à jour
 
-1. Supprimer le dossier albwrandomizer du dossier `Archipelago/lib/`.
-2. Faire les étapes 2 et 3 de l'[Installation](#installation) 
+1. **Jusqu'à la 0.1.3 inclue**: Supprimer le dossier albwrandomizer du dossier `Archipelago/lib/`.
+2. Faire les étapes 2 et 3 de l'[Installation](#installation)
 
 ## Générer une partie
 
