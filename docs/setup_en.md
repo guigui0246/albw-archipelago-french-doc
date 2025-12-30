@@ -14,6 +14,10 @@
 3. **For versions 0.1.3 and earlier only**: Download and unzip `albwrandomizer.zip`. Place the `albwrandomizer` folder inside the `Archipelago/lib/` folder.
 4. Also in the emulator, select `Emulation > Configure`. Then, in the general section, on the top, select `Debug`. Finally, at the bottom, ensure that the `Enable RPC Server` option is enabled.
 
+# Updating
+1. **Up to and including 0.1.3**: Delete the albwrandomizer folder from the `Archipelago/lib/` folder.
+2. Perform steps 2 and 3 of the [Installation](#installation) section.
+
 ## Generating a Game
 
 1. Create your player options YAML file. A sample YAML is included.
