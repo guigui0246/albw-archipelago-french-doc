@@ -3,7 +3,7 @@
 ## Required Software
 
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases).
-- A decrypted, North American A Link Between Worlds `.3ds` ROM. Instructions for dumping your ROM can be found [here](https://wiki.hacks.guide/wiki/3DS:Dump_titles_and_game_cartridges). **Make sure to select "decrypt" when dumping.** Note: for use with the Azahar emulator (below), rename the `.3ds` ROM to a `.cci` file. These files are identical, only the extension is different.
+- A decrypted, North American A Link Between Worlds `.3ds` until 0.1.3 and `.cci` since 0.1.4 ROM. Instructions for dumping your ROM can be found [here](https://wiki.hacks.guide/wiki/3DS:Dump_titles_and_game_cartridges). **Make sure to select "decrypt" when dumping.** Note: for use with the Azahar emulator (below), rename you'll need a `.cci` ROM, you can rename a `.3ds` ROM. These files are identical, only the extension is different.
 - [Azahar](https://azahar-emu.org/pages/download/)
 - **The game must be played with the language set to English.**
 
@@ -11,7 +11,7 @@
 
 1. Install the latest version of Archipelago.
 2. Download `albw.apworld` and put it in your `Archipelago/custom_worlds/` folder.
-3. In the emulator, select `File > Open Azahar Folder`. Create a `load` folder inside this folder, and inside the `load` folder create a `mods` folder.
+3. **For versions 0.1.3 and earlier only**: Download and unzip `albwrandomizer.zip`. Place the `albwrandomizer` folder inside the `Archipelago/lib/` folder.
 4. Also in the emulator, select `Emulation > Configure`. Then, in the general section, on the top, select `Debug`. Finally, at the bottom, ensure that the `Enable RPC Server` option is enabled.
 
 ## Generating a Game
