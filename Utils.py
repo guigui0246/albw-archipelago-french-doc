@@ -4,7 +4,7 @@ import shutil
 import sys
 import tempfile
 import zipfile
-from Utils import is_frozen, local_path
+from Utils import local_path
 
 def setup_lib():
     # clean up any files from old versions of the apworld
@@ -17,12 +17,10 @@ def setup_lib():
                 else:
                     os.remove(fullpath)
 
-    if is_frozen():
-        path = os.path.dirname(__file__)
-        dirname = os.path.basename(path)
-        apworld_path = os.path.dirname(path)
+    apworld_path = os.path.dirname(os.path.dirname(__file__))
+    if apworld_path.endswith(".apworld"):
         with zipfile.ZipFile(apworld_path, "r") as apworld:
-            with apworld.open(os.path.join(dirname, "archipelago.json"), "r") as manifest_file:
+            with apworld.open("albw/archipelago.json", "r") as manifest_file:
                 manifest = orjson.loads(manifest_file.read())
             version = manifest["world_version"]
             tmp_path = os.path.join(tempfile.gettempdir(), f"albwrandomizer_{version}")
@@ -32,14 +30,13 @@ def setup_lib():
                 os.mkdir(tmp_path)
                 randomizer_path = os.path.join(tmp_path, "albwrandomizer")
                 os.mkdir(randomizer_path)
-                world_lib_path = os.path.join(dirname, "albwrandomizer")
                 for info in apworld.infolist():
-                    if not info.is_dir() and info.filename.startswith(world_lib_path):
+                    if not info.is_dir() and info.filename.startswith("albw/albwrandomizer/"):
                         info.filename = os.path.basename(info.filename)
                         apworld.extract(info, randomizer_path)
             if not tmp_path in sys.path:
                 sys.path.append(tmp_path)
     else:
-        path = os.path.dirname(__file__)
+        path = os.path.join(os.path.dirname(__file__), "albwrandomizer")
         if not path in sys.path:
             sys.path.append(path)
