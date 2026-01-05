@@ -9,13 +9,14 @@ from Utils import local_path
 def setup_lib():
     # clean up any files from old versions of the apworld
     for path in [local_path("."), local_path("lib")]:
-        for entry in os.scandir(path):
-            if entry.name.startswith("albwrandomizer"):
-                fullpath = os.path.join(path, entry.name)
-                if entry.is_dir():
-                    shutil.rmtree(fullpath)
-                else:
-                    os.remove(fullpath)
+        if os.path.exists(path):
+            for entry in os.scandir(path):
+                if entry.name.startswith("albwrandomizer"):
+                    fullpath = os.path.join(path, entry.name)
+                    if entry.is_dir():
+                        shutil.rmtree(fullpath)
+                    else:
+                        os.remove(fullpath)
 
     apworld_path = os.path.dirname(os.path.dirname(__file__))
     if apworld_path.endswith(".apworld"):
