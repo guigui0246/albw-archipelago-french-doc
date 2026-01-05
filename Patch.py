@@ -185,6 +185,3 @@ class ALBWPatchExtension(metaclass=AutoPatchExtensionRegister):
             with open(output_path, "rb") as output_file:
                 output = output_file.read()
             return output
-
-if __name__ == "__main__":
-    create_rom_file(sys.argv[1])
