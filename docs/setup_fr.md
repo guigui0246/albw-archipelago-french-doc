@@ -1,5 +1,9 @@
 # A Link Between Worlds Guide d'Installation
 
+## ATTENTION
+Il y a un problème connu actuellement où si vous fermez Archipelago puis le rouvrez, le client pourrait ne pas apparaître.
+Si cela arrive, fermez complètement Archipelago, attendez quelques secondes pour être sûr qu'il est bien fermé (vous pouvez vérifier dans le Gestionnaire des Tâches), supprimez le dossier `albwrandomizer_0.1.4` dans le dossier `%temp%` (vous pouvez entrer ce chemin dans la barre d'adresse de l'explorateur de fichiers ou dans la boîte de dialogue Exécuter en appuyant sur Win+R pour les utilisateurs Windows), puis rouvrez Archipelago.
+
 ## Software Nécessaire
 
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases).
