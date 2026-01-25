@@ -11,6 +11,7 @@ from Fill import fill_restrictive, sweep_from_pool
 from settings import Group, UserFilePath
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 from worlds.generic.Rules import set_rule
+from .Hints import sanitize, generate_hints, generate_bow_of_light_hint
 from .Items import ALBWItem, Items, ItemData, ItemType, all_items, item_table, vane_to_item, \
     convenient_hyrule_vanes, convenient_lorule_vanes, hyrule_vanes, lorule_vanes
 from .Locations import ALBWLocation, LocationData, LocationType, all_locations, dungeon_table, location_table, \
@@ -32,7 +33,7 @@ components.append(
         func=launch_client,
         component_type=Type.CLIENT,
         file_identifier=SuffixIdentifier(".apalbw"),
-        cli=True,
+        # cli=True,
     )
 )
 
@@ -142,8 +143,8 @@ class ALBWWorld(World):
         region_graph = self.seed_info.get_region_graph()
 
         # generate regions and locations
-        for (region_name, (locations, _)) in region_graph.items():
-            region = Region(region_name, self.player, self.multiworld)
+        for (region_name, (hint_name, locations, _)) in region_graph.items():
+            region = Region(region_name, self.player, self.multiworld, hint_name)
             self.multiworld.regions.append(region)
             for location_name in locations:
                 # skip locations like hint ghosts without AP counterparts
@@ -180,7 +181,7 @@ class ALBWWorld(World):
 
         # generate connections
         path_counts = {}
-        for (source_region_name, (_, paths)) in region_graph.items():
+        for (source_region_name, (_, _, paths)) in region_graph.items():
             for target_region_name in paths:
                 source_region = self.multiworld.get_region(source_region_name, self.player)
                 target_region = self.multiworld.get_region(target_region_name, self.player)
@@ -270,10 +271,12 @@ class ALBWWorld(World):
     def generate_output(self, output_directory: str) -> None:
         # Create patch info object
         check_map = self._build_check_map()
-        items = {loc.name: PatchItemInfo(loc.item.name, loc.item.classification.as_flag())
+        items = {loc.name: PatchItemInfo(sanitize(loc.item.name), loc.item.classification.as_flag())
                         for loc in self.multiworld.get_locations(self.player)}
+        hints = generate_hints(self.multiworld, self.player, self.options, self.random)
+        bow_of_light_hint = generate_bow_of_light_hint(self.multiworld, self.player)
         patch_info = PatchInfo(PatchInfo.cur_version.as_simple_string(), self.seed, self.player_name,
-                               self.options, check_map, items)
+                               self.options, check_map, items, hints, bow_of_light_hint)
 
         # Write patch info to json file
         patch = ALBWProcedurePatch(player=self.player, player_name=self.player_name)

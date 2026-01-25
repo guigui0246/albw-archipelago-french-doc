@@ -1,7 +1,7 @@
 from typing import Dict, List, Optional
 from enum import Enum
 from BaseClasses import Item, ItemClassification
-from .Options import ALBWOptions, LogicMode
+from .Options import ALBWOptions, HintGhosts, LogicMode
 from albwrandomizer import PyRandomizable, Item as RItem, Goal, Vane, new_item, new_goal, new_vane
 
 class ALBWItem(Item):
@@ -77,6 +77,8 @@ class ItemData:
     def get_classification(self, options: ALBWOptions):
         if self == Items.Mail and options.logic_mode in [LogicMode.option_adv_glitched, LogicMode.option_hell]:
             return progression
+        if self == Items.HintGlasses and options.hint_ghosts == HintGhosts.option_glasses:
+            return useful
         return self.classification
     
 def goal(name: str, goal: Goal) -> ItemData:
@@ -86,61 +88,61 @@ def vane(name: str, vane: Vane) -> ItemData:
     return ItemData(None, name, ItemType.Vane, progression, [new_vane(vane)], vane=vane)
 
 class Items:
-    Bow = ItemData(0, "Bow", Ravio, progression, [
+    Bow = ItemData(0, "Bow", Ravio, progression | useful, [
         new_item(RItem.Bow01),
         new_item(RItem.Bow02),
     ], 2)
-    Boomerang = ItemData(1, "Boomerang", Ravio, progression, [
+    Boomerang = ItemData(1, "Boomerang", Ravio, progression | useful, [
         new_item(RItem.Boomerang01),
         new_item(RItem.Boomerang02),
     ], 2)
-    Hookshot = ItemData(2, "Hookshot", Ravio, progression, [
+    Hookshot = ItemData(2, "Hookshot", Ravio, progression | useful, [
         new_item(RItem.Hookshot01),
         new_item(RItem.Hookshot02)
     ], 2)
-    Bombs = ItemData(3, "Bombs", Ravio, progression, [
+    Bombs = ItemData(3, "Bombs", Ravio, progression | useful, [
         new_item(RItem.Bombs01),
         new_item(RItem.Bombs02),
     ], 2)
-    FireRod = ItemData(4, "Fire Rod", Ravio, progression, [
+    FireRod = ItemData(4, "Fire Rod", Ravio, progression | useful, [
         new_item(RItem.FireRod01),
         new_item(RItem.FireRod02),
     ], 2)
-    IceRod = ItemData(5, "Ice Rod", Ravio, progression, [
+    IceRod = ItemData(5, "Ice Rod", Ravio, progression | useful, [
         new_item(RItem.IceRod01),
         new_item(RItem.IceRod02),
     ], 2)
-    Hammer = ItemData(6, "Hammer", Ravio, progression, [
+    Hammer = ItemData(6, "Hammer", Ravio, progression | useful, [
         new_item(RItem.Hammer01),
         new_item(RItem.Hammer02),
     ], 2)
-    SandRod = ItemData(7, "Sand Rod", Ravio, progression, [
+    SandRod = ItemData(7, "Sand Rod", Ravio, progression | useful, [
         new_item(RItem.SandRod01),
         new_item(RItem.SandRod02),
     ], 2)
-    TornadoRod = ItemData(8, "Tornado Rod", Ravio, progression, [
+    TornadoRod = ItemData(8, "Tornado Rod", Ravio, progression | useful, [
         new_item(RItem.TornadoRod01),
         new_item(RItem.TornadoRod02)
     ], 2)
-    Bell = ItemData(9, "Bell", Normal, progression, [new_item(RItem.Bell)])
+    Bell = ItemData(9, "Bell", Normal, progression | useful, [new_item(RItem.Bell)])
     StaminaScroll = ItemData(10, "Stamina Scroll", Normal, progression, [new_item(RItem.StaminaScroll)])
-    BowOfLight = ItemData(11, "Bow of Light", Normal, progression, [new_item(RItem.BowOfLight)])
-    Boots = ItemData(12, "Pegasus Boots", Normal, progression, [new_item(RItem.PegasusBoots)])
-    Flippers = ItemData(13, "Flippers", Normal, progression, [new_item(RItem.Flippers)])
-    Bracelet = ItemData(14, "Progressive Bracelet", Normal, progression, [
+    BowOfLight = ItemData(11, "Bow of Light", Normal, progression_skip_balancing, [new_item(RItem.BowOfLight)])
+    Boots = ItemData(12, "Pegasus Boots", Normal, progression | useful, [new_item(RItem.PegasusBoots)])
+    Flippers = ItemData(13, "Flippers", Normal, progression | useful, [new_item(RItem.Flippers)])
+    Bracelet = ItemData(14, "Progressive Bracelet", Normal, progression | useful, [
         new_item(RItem.RaviosBracelet01),
         new_item(RItem.RaviosBracelet02),
     ], 2)
     HylianShield = ItemData(15, "Hylian Shield", Normal, useful, [new_item(RItem.HylianShield)])
-    SmoothGem = ItemData(16, "Smooth Gem", Normal, progression, [new_item(RItem.SmoothGem)])
+    SmoothGem = ItemData(16, "Smooth Gem", Normal, progression_skip_balancing, [new_item(RItem.SmoothGem)])
     # Letter = ItemData(17, "Letter in a Bottle", Normal, progression, [new_item(RItem.LetterInABottle)])
-    PremiumMilk = ItemData(18, "Premium Milk", Normal, progression, [new_item(RItem.PremiumMilk)])
+    PremiumMilk = ItemData(18, "Premium Milk", Normal, progression_skip_balancing, [new_item(RItem.PremiumMilk)])
     Pouch = ItemData(19, "Pouch", Normal, useful, [new_item(RItem.Pouch)])
     BeeBadge = ItemData(20, "Bee Badge", Normal, filler, [new_item(RItem.BeeBadge)])
     HintGlasses = ItemData(21, "Hint Glasses", Normal, filler, [new_item(RItem.HintGlasses)])
     Charm = ItemData(22, "Charm", Normal, filler, [new_item(RItem.Charm)])
     GreatSpin = ItemData(23, "Great Spin", Normal, progression, [new_item(RItem.GreatSpin)])
-    Quake = ItemData(24, "Quake", Normal, progression, [new_item(RItem.Quake)])
+    Quake = ItemData(24, "Quake", Normal, progression | useful, [new_item(RItem.Quake)])
     RupeeGreen = ItemData(25, "Green Rupee", Junk, filler, [new_item(RItem.RupeeGreen)], 2)
     RupeeBlue = ItemData(26, "Blue Rupee", Junk, filler, [new_item(RItem.RupeeBlue)], 8)
     RupeeRed = ItemData(27, "Red Rupee", Junk, filler, [new_item(RItem.RupeeRed)], 20)
@@ -164,13 +166,13 @@ class Items:
         new_item(RItem.Lamp01),
         new_item(RItem.Lamp02),
     ], 2)
-    Sword = ItemData(39, "Progressive Sword", Normal, progression, [
+    Sword = ItemData(39, "Progressive Sword", Normal, progression | useful, [
         new_item(RItem.Sword01),
         new_item(RItem.Sword02),
         new_item(RItem.Sword03),
         new_item(RItem.Sword04),
     ], 4)
-    Glove = ItemData(40, "Progressive Glove", Normal, progression, [
+    Glove = ItemData(40, "Progressive Glove", Normal, progression | useful, [
         new_item(RItem.Glove01),
         new_item(RItem.Glove02),
     ], 2)
@@ -182,7 +184,7 @@ class Items:
         new_item(RItem.Mail01),
         new_item(RItem.Mail02),
     ], 2)
-    Ore = ItemData(43, "Master Ore", Normal, progression, [
+    Ore = ItemData(43, "Master Ore", Normal, progression_skip_balancing, [
         new_item(RItem.OreYellow),
         new_item(RItem.OreGreen),
         new_item(RItem.OreBlue),

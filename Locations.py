@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, NamedTuple, Optional, Tuple
 from enum import Enum
 from BaseClasses import Location
 from .Items import ItemData, Items
@@ -571,30 +571,26 @@ location_lists: List[List[LocationData]] = [
 all_locations: List[LocationData] = [loc for loc_list in location_lists for loc in loc_list]
 location_table: Dict[str, LocationData] = {loc.name: loc for loc in all_locations}
 
-class Dungeon:
+class Dungeon(NamedTuple):
     name: str
     locations: List[LocationData]
     items: List[ItemData]
-
-    def __init__(self, name: str, locations: List[LocationData], items: List[ItemData]):
-        self.name = name
-        self.locations = locations
-        self.items = items
+    textcolor: int
 
 dungeon_table: List[Dungeon] = [
-    Dungeon("Hyrule Sanctuary", hyrule_sanctuary_locations, [Items.KeyHyruleSanctuary]),
-    Dungeon("Lorule Sanctuary", lorule_sanctuary_locations, [Items.KeyLoruleSanctuary]),
-    Dungeon("Eastern Palace", eastern_locations, [Items.KeyEastern, Items.BigKeyEastern, Items.CompassEastern]),
-    Dungeon("House of Gales", gales_locations, [Items.KeyGales, Items.BigKeyGales, Items.CompassGales]),
-    Dungeon("Tower of Hera", hera_locations, [Items.KeyHera, Items.BigKeyHera, Items.CompassHera]),
-    Dungeon("Dark Palace", dark_locations, [Items.KeyDark, Items.BigKeyDark, Items.CompassDark]),
-    Dungeon("Swamp Palace", swamp_locations, [Items.KeySwamp, Items.BigKeySwamp, Items.CompassSwamp]),
-    Dungeon("Skull Woods", skull_locations, [Items.KeySkull, Items.BigKeySkull, Items.CompassSkull]),
-    Dungeon("Thieves' Hideout", thieves_locations, [Items.KeyThieves, Items.BigKeyThieves, Items.CompassThieves]),
-    Dungeon("Ice Ruins", ice_locations, [Items.KeyIce, Items.BigKeyIce, Items.CompassIce]),
-    Dungeon("Desert Palace", desert_locations, [Items.KeyDesert, Items.BigKeyDesert, Items.CompassDesert]),
-    Dungeon("Turtle Rock", turtle_locations, [Items.KeyTurtle, Items.BigKeyTurtle, Items.CompassTurtle]),
-    Dungeon("Lorule Castle", lorule_castle_locations, [Items.KeyCastle, Items.CompassCastle])
+    Dungeon("Hyrule Sanctuary", hyrule_sanctuary_locations, [Items.KeyHyruleSanctuary], 7),
+    Dungeon("Lorule Sanctuary", lorule_sanctuary_locations, [Items.KeyLoruleSanctuary], 7),
+    Dungeon("Eastern Palace", eastern_locations, [Items.KeyEastern, Items.BigKeyEastern, Items.CompassEastern], 5),
+    Dungeon("House of Gales", gales_locations, [Items.KeyGales, Items.BigKeyGales, Items.CompassGales], 6),
+    Dungeon("Tower of Hera", hera_locations, [Items.KeyHera, Items.BigKeyHera, Items.CompassHera], 10),
+    Dungeon("Dark Palace", dark_locations, [Items.KeyDark, Items.BigKeyDark, Items.CompassDark], 5),
+    Dungeon("Swamp Palace", swamp_locations, [Items.KeySwamp, Items.BigKeySwamp, Items.CompassSwamp], 3),
+    Dungeon("Skull Woods", skull_locations, [Items.KeySkull, Items.BigKeySkull, Items.CompassSkull], 6),
+    Dungeon("Thieves' Hideout", thieves_locations, [Items.KeyThieves, Items.BigKeyThieves, Items.CompassThieves], 3),
+    Dungeon("Ice Ruins", ice_locations, [Items.KeyIce, Items.BigKeyIce, Items.CompassIce], 10),
+    Dungeon("Desert Palace", desert_locations, [Items.KeyDesert, Items.BigKeyDesert, Items.CompassDesert], 9),
+    Dungeon("Turtle Rock", turtle_locations, [Items.KeyTurtle, Items.BigKeyTurtle, Items.CompassTurtle], 8),
+    Dungeon("Lorule Castle", lorule_castle_locations, [Items.KeyCastle, Items.CompassCastle], 8)
 ]
 
 # Locations that cannot have dungeon items because they are outside the dungeon they are associated with

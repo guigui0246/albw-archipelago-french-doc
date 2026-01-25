@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, get_type_hints
 from Options import PerGameCommonOptions, Choice, Range, Toggle
 import albwrandomizer
 
@@ -149,6 +149,17 @@ class SwordlessMode(Toggle):
     The Bug Net becomes a required item to play Dead Man's Volley against Yuga Ganon."""
     display_name = "Swordless Mode"
 
+class HintGhosts(Choice):
+    """Choose the behavior of the Hint Ghosts. (Hint Ghosts in dungeons never appear.)
+    off: Hint Ghosts do not appear.
+    always: Hint Ghosts always appear.
+    glasses: Hint Ghosts appear once you obtain the Hint Glasses item."""
+    display_name = "Hint Ghosts"
+    option_off = 0
+    option_always = 1
+    option_glasses = 2
+    default = 1
+
 class ChestSizeMatchesContents(Toggle):
     """All chests containing progression items will become large, and others will be made small.
     Note: Some large chests will have a reduced hitbox to prevent negative gameplay interference."""
@@ -174,7 +185,7 @@ class Keysy(Choice):
     option_all = 3
 
 @dataclass
-class ALBWSpecificOptions:
+class ALBWOptions(PerGameCommonOptions):
     logic_mode: LogicMode
     randomize_dungeon_prizes: RandomizeDungeonPrizes
     lorule_castle_requirement: LoruleCastleRequirement
@@ -195,16 +206,17 @@ class ALBWSpecificOptions:
     weather_vanes: WeatherVanes
     dark_rooms_lampless: DarkRoomsLampless
     swordless_mode: SwordlessMode
+    hint_ghosts: HintGhosts
     chest_size_matches_contents: ChestSizeMatchesContents
     treacherous_tower_floors: TreacherousTowerFloors
     purple_potion_bottles: PurplePotionBottles
     keysy: Keysy
 
-@dataclass
-class ALBWOptions(PerGameCommonOptions, ALBWSpecificOptions):
-    pass
+    @classmethod
+    def option_names(cls):
+        return [option for option in get_type_hints(cls) if option not in get_type_hints(PerGameCommonOptions)]
 
-def create_randomizer_settings(options: ALBWSpecificOptions) -> albwrandomizer.Settings:
+def create_randomizer_settings(options: ALBWOptions) -> albwrandomizer.Settings:
     settings = albwrandomizer.Settings()
 
     settings.dev_mode = False
@@ -309,5 +321,12 @@ def create_randomizer_settings(options: ALBWSpecificOptions) -> albwrandomizer.S
 
     if options.open_trials_door:
         settings.trials_door = albwrandomizer.TrialsDoor.OpenFromBothSides
+
+    if options.hint_ghosts == HintGhosts.option_off:
+        settings.hint_ghosts = albwrandomizer.HintGhosts.Off
+    elif options.hint_ghosts == HintGhosts.option_always:
+        settings.hint_ghosts = albwrandomizer.HintGhosts.Always
+    elif options.hint_ghosts == HintGhosts.option_glasses:
+        settings.hint_ghosts = albwrandomizer.HintGhosts.Glasses
 
     return settings
