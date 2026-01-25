@@ -115,6 +115,8 @@ class ALBWPatchExtension(metaclass=AutoPatchExtensionRegister):
 
     @staticmethod
     def patch_albw(caller: ALBWProcedurePatch, rom: bytes, patch_name: str) -> bytes:
+        GAME_ID = "00040000000EC300"
+
         # Load patch info from the json file
         patch_info = from_json(caller.get_file(patch_name))
 
@@ -137,6 +139,21 @@ class ALBWPatchExtension(metaclass=AutoPatchExtensionRegister):
             output_subdirectory = os.path.join(output_directory, f"tmp_apalbw_{caller.player}")
             os.mkdir(output_subdirectory)
             seed_info.patch(caller.rom_file, output_subdirectory)
+
+            # Optionally install the patch
+            mod_path = getattr(get_settings().albw_settings, "mod_path", "")
+            if mod_path != "":
+                if os.path.exists(mod_path):
+                    try:
+                        albw_mod_path = os.path.join(mod_path, GAME_ID)
+                        if os.path.exists(albw_mod_path):
+                            shutil.rmtree(albw_mod_path)
+                        tmp_mod_path = os.path.join(output_subdirectory, GAME_ID)
+                        shutil.copytree(tmp_mod_path, albw_mod_path)
+                    except Exception as err:
+                        print(f"Error installing mod: {err}")
+                else:
+                    print(f"Could not install mod, path {mod_path} does not exist")
 
             # Put the patch in a zip file
             output_path = os.path.join(output_directory, f"tmp_apalbw_{caller.player}.zip")

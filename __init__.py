@@ -8,7 +8,7 @@ from worlds.AutoWorld import WebWorld, World
 from BaseClasses import CollectionState, Item, ItemClassification, Location, LocationProgressType, MultiWorld, \
     Region, Tutorial
 from Fill import fill_restrictive, sweep_from_pool
-from settings import Group, UserFilePath
+from settings import Group, UserFilePath, UserFolderPath
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 from worlds.generic.Rules import set_rule
 from .Hints import sanitize, generate_hints, generate_bow_of_light_hint
@@ -61,8 +61,15 @@ class ALBWSettings(Group):
         @classmethod
         def validate(cls, path: str) -> None:
             pass #TODO add validation; hashing doesn't work for 3ds roms
+    
+    class ModPath(UserFolderPath):
+        """Optional: path to mods folder (either "<path-to-azahar-folder>/load/mods" or "<path-to-sd-card>/luma/plugins")
+        Setting this to a non-empty value will cause the patcher to automatically install the mod."""
+        description = "Mods Folder"
+        required = False
 
     rom_file: ALBWRomFile = ALBWRomFile("Legend of Zelda, The - A Link Between Worlds (USA) (En,Fr,Es).cci")
+    mod_path: ModPath = ModPath("")
 
 class ALBWWorld(World):
     """
