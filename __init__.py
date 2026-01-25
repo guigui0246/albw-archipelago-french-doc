@@ -63,7 +63,7 @@ class ALBWSettings(Group):
             pass #TODO add validation; hashing doesn't work for 3ds roms
     
     class ModPath(UserFolderPath):
-        """Optional: path to mods folder (either "<path-to-azahar-folder>/load/mods" or "<path-to-sd-card>/luma/plugins")
+        """Optional: path to mods folder (either "<path-to-azahar-folder>/load/mods" or "<path-to-sd-card>/luma/titles")
         Setting this to a non-empty value will cause the patcher to automatically install the mod."""
         description = "Mods Folder"
         required = False
