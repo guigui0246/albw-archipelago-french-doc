@@ -22,6 +22,10 @@ class RandomizeDungeonPrizes(Toggle):
     """This shuffles all Sage Portraits and Pendants among themselves."""
     display_name = "Randomize Dungeon Prizes"
 
+class ProgressionBosses(Toggle):
+    """Place progression items on all dungeon bosses."""
+    display_name = "Progression Bosses"
+
 class LoruleCastleRequirement(Range):
     """Choose how many Portraits are needed to enter Lorule Castle and fight Yuganon."""
     display_name = "Lorule Castle Requirement"
@@ -65,7 +69,7 @@ class NoProgressionEnemies(Toggle):
     display_name = "No Progression Enemies"
 
 class AssuredWeapon(Toggle):
-    """"If enabled at least one weapon is guaranteed to be placed in Ravio's Shop."""
+    """If enabled at least one weapon is guaranteed to be placed in Ravio's Shop."""
     display_name = "Assured Weapon"
 
 class MaiamaiMayhem(Toggle):
@@ -191,6 +195,7 @@ class Keysy(Choice):
 class ALBWOptions(PerGameCommonOptions):
     logic_mode: LogicMode
     randomize_dungeon_prizes: RandomizeDungeonPrizes
+    progression_bosses: ProgressionBosses
     lorule_castle_requirement: LoruleCastleRequirement
     pedestal_requirement: PedestalRequirement
     nice_items: NiceItems

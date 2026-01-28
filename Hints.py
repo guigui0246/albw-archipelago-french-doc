@@ -161,13 +161,16 @@ def generate_hints(multiworld: MultiWorld, player: int, options: ALBWOptions, ra
 
     long_location_hints = []
     for loc_name, hint_format in long_locations:
-        location = multiworld.get_location(loc_name, player)
-        if not location or not location.item or location.progress_type == LocationProgressType.EXCLUDED:
+        try:
+            location = multiworld.get_location(loc_name, player)
+            if not location or not location.item or location.progress_type == LocationProgressType.EXCLUDED:
+                continue
+            item = location.item
+            player_possessive = "your" if item.player == player else color_player(f"{multiworld.get_player_name(item.player)}'s")
+            hint = hint_format.format(f"{player_possessive} {color_item(item.name)}")
+            long_location_hints.append(hint)
+        except KeyError:
             continue
-        item = location.item
-        player_possessive = "your" if item.player == player else color_player(f"{multiworld.get_player_name(item.player)}'s")
-        hint = hint_format.format(f"{player_possessive} {color_item(item.name)}")
-        long_location_hints.append(hint)
 
     major_item_hints = []
     major_names = set([item.name for item in major_items])

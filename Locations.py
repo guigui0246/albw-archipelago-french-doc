@@ -41,6 +41,11 @@ class LocationData:
         self.loctype = loctype
         self.default_item = default_item
 
+    def is_minigame(self):
+        return self.loctype == LocationType.Minigame \
+            or self.name == "[Mai] Hyrule Rupee Rush Wall" \
+            or self.name == "[Mai] Lorule Rupee Rush Wall"
+
 Maiamai = LocationType.Maiamai
 Ravio = LocationType.Ravio
 Upgrade = LocationType.Upgrade
@@ -600,6 +605,19 @@ dungeon_item_excludes: List[str] = [
     "[DP] Zaganaga",
     "[TR] Left Balcony",
     "[LC] Zelda",
+]
+
+dungeon_bosses: List[str] = [
+    "[EP] Yuga (1)",
+    "[HG] Margomill",
+    "[TH] Moldorm",
+    "[PD] Gemesaur King",
+    "[SP] Arrghus",
+    "[SW] Knucklemaster",
+    "[TT] Stalblind",
+    "[IR] Dharkstare",
+    "[DP] Zaganaga",
+    "[TR] Grinexx",
 ]
 
 starting_weapon_locations: List[str] = [

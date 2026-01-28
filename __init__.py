@@ -15,7 +15,7 @@ from .Hints import sanitize, generate_hints, generate_bow_of_light_hint
 from .Items import ALBWItem, Items, ItemData, ItemType, all_items, item_table, vane_to_item, \
     convenient_hyrule_vanes, convenient_lorule_vanes, hyrule_vanes, lorule_vanes
 from .Locations import ALBWLocation, LocationData, LocationType, all_locations, dungeon_table, location_table, \
-    dungeon_item_excludes, starting_weapon_locations
+    dungeon_bosses, dungeon_item_excludes, starting_weapon_locations
 from .Options import ALBWOptions, CrackShuffle, InitialCrackState, Keysy, LogicMode, NiceItems, WeatherVanes, \
     create_randomizer_settings
 from .Patch import PatchInfo, PatchItemInfo, ALBWProcedurePatch
@@ -161,23 +161,17 @@ class ALBWWorld(World):
                 loc_data = location_table[location_name]
                 if self._is_unrandomized(loc_data):
                     continue
-                location = self.create_location(location_name, region)
 
-                # exclude Mother Maiamai locations so Maiamai can be filler items
-                # if loc_data.loctype == LocationType.Upgrade and self.options.nice_mode:
-                #     location.progress_type = LocationProgressType.EXCLUDED
-                
-                # optionally exclude minigames
-                if self.options.minigames_excluded:
-                    if loc_data.loctype == LocationType.Minigame:
-                        location.progress_type = LocationProgressType.EXCLUDED
-                    if loc_data.name == "[Mai] Hyrule Rupee Rush Wall" or loc_data.name == "[Mai] Lorule Rupee Rush Wall":
-                        location.progress_type = LocationProgressType.EXCLUDED
+                location = self.create_location(location_name, region)
 
                 # place default item
                 item = self._get_location_item(loc_data)
                 if item is not None:
                     location.place_locked_item(self.create_item(item.name))
+
+                # optionally prioritize bosses
+                if self.options.progression_bosses and location_name in dungeon_bosses:
+                    location.progress_type = LocationProgressType.PRIORITY
 
                 set_rule(location, lambda state, location_name=location_name:
                     self.seed_info.can_reach(location_name, self._convert_state(state)))
@@ -245,7 +239,8 @@ class ALBWWorld(World):
             dungeon_itempool = [item for item in self.pre_fill_items if item_table[item.name] in dungeon.items]
             if dungeon.name == "Lorule Castle" and self.options.bow_of_light_in_castle:
                 dungeon_itempool.append(self.create_item(Items.BowOfLight.name))
-            dungeon_location_names = [loc.name for loc in dungeon.locations if loc.name not in dungeon_item_excludes]
+            dungeon_location_names = [loc.name for loc in dungeon.locations if loc.name not in dungeon_item_excludes
+                and not (self.options.progression_bosses and loc.name in dungeon_bosses)]
             self._initial_fill(dungeon_itempool, dungeon_location_names)
         
         # starting weapon
@@ -333,6 +328,12 @@ class ALBWWorld(World):
             for loc in all_locations:
                 if loc.loctype == LocationType.Upgrade:
                     check_map[loc.name] = Items.RupeeGreen.name
+
+        # Fill in unrandomized minigames
+        if self.options.minigames_excluded:
+            for loc in all_locations:
+                if loc.is_minigame():
+                    check_map[loc.name] = Items.RupeeGreen.name
         
         # Fill in inaccessible shop items
         check_map["Thieves' Town Item Shop (2)"] = Items.GoldBee.name
@@ -382,8 +383,8 @@ class ALBWWorld(World):
     
     def _is_unrandomized(self, location: LocationData) -> bool:
         return (location.loctype == LocationType.Maiamai and not self.options.maiamai_mayhem) \
-            or location.loctype == LocationType.Upgrade
-            # or (location.loctype == LocationType.Upgrade and not self.options.nice_mode)
+            or location.loctype == LocationType.Upgrade \
+            or (self.options.minigames_excluded and location.is_minigame())
     
     def _save_for_pre_fill(self, item: ItemData) -> bool:
         return item.is_dungeon_item() \
