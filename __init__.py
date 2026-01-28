@@ -353,7 +353,11 @@ class ALBWWorld(World):
             return 0
         if item.itemtype == ItemType.BigKey and self.options.keysy in [Keysy.option_big, Keysy.option_all]:
             return 0
-        if item == Items.Quake and self.options.initial_crack_state == InitialCrackState.option_open:
+        if item == Items.Quake and self.options.initial_crack_state != InitialCrackState.option_closed:
+            return 0
+        if item == Items.Merge and self.options.initial_crack_state != InitialCrackState.option_progressive:
+            return 0
+        if item == Items.Bracelet and self.options.initial_crack_state == InitialCrackState.option_progressive:
             return 0
         if (item == Items.Lamp or item == Items.Net) and not self.options.super_items:
             return 1

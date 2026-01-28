@@ -75,10 +75,13 @@ class MaiamaiMayhem(Toggle):
 class InitialCrackState(Choice):
     """Choose the initial Crack state:
     closed: All Cracks except the Hyrule Castle Crack (and its pair) remain closed until the Quake Item is found.
-    open: All Cracks are open from the start of the game, and the Quake Item is not in the item pool."""
+    open: All Cracks are open from the start of the game, and the Quake Item is not in the item pool.
+    progressive: All Cracks except the Hyrule Castle Crack are closed, but the Quake Item and the Bracelets are not in the item pool.
+      Instead, there are two Progressive Merge items. The first one you get allows you to merge, while the second one opens the cracks."""
     display_name = "Initial Crack State"
     option_closed = 0
     option_open = 1
+    option_progressive = 2
     default = 1
 
 class CrackShuffle(Choice):
@@ -274,6 +277,8 @@ def create_randomizer_settings(options: ALBWOptions) -> albwrandomizer.Settings:
         settings.cracks = albwrandomizer.Cracks.Closed
     elif options.initial_crack_state == InitialCrackState.option_open:
         settings.cracks = albwrandomizer.Cracks.Open
+    elif options.initial_crack_state == InitialCrackState.option_progressive:
+        settings.cracks = albwrandomizer.Cracks.Progressive
     
     if options.crack_shuffle == CrackShuffle.option_off:
         settings.cracksanity = albwrandomizer.Cracksanity.Off

@@ -33,6 +33,7 @@ filler = ItemClassification.filler
 useful = ItemClassification.useful
 progression = ItemClassification.progression
 progression_skip_balancing = ItemClassification.progression_skip_balancing
+progression_deprioritized = ItemClassification.progression_deprioritized_skip_balancing
 
 class ItemData:
     code: Optional[int]
@@ -134,9 +135,8 @@ class Items:
         new_item(RItem.RaviosBracelet02),
     ], 2)
     HylianShield = ItemData(15, "Hylian Shield", Normal, useful, [new_item(RItem.HylianShield)])
-    SmoothGem = ItemData(16, "Smooth Gem", Normal, progression_skip_balancing, [new_item(RItem.SmoothGem)])
-    # Letter = ItemData(17, "Letter in a Bottle", Normal, progression, [new_item(RItem.LetterInABottle)])
-    PremiumMilk = ItemData(18, "Premium Milk", Normal, progression_skip_balancing, [new_item(RItem.PremiumMilk)])
+    SmoothGem = ItemData(16, "Smooth Gem", Normal, progression_deprioritized, [new_item(RItem.SmoothGem)])
+    PremiumMilk = ItemData(18, "Premium Milk", Normal, progression, [new_item(RItem.PremiumMilk)])
     Pouch = ItemData(19, "Pouch", Normal, useful, [new_item(RItem.Pouch)])
     BeeBadge = ItemData(20, "Bee Badge", Normal, filler, [new_item(RItem.BeeBadge)])
     HintGlasses = ItemData(21, "Hint Glasses", Normal, filler, [new_item(RItem.HintGlasses)])
@@ -184,7 +184,7 @@ class Items:
         new_item(RItem.Mail01),
         new_item(RItem.Mail02),
     ], 2)
-    Ore = ItemData(43, "Master Ore", Normal, progression_skip_balancing, [
+    Ore = ItemData(43, "Master Ore", Normal, progression_deprioritized, [
         new_item(RItem.OreYellow),
         new_item(RItem.OreGreen),
         new_item(RItem.OreBlue),
@@ -295,6 +295,10 @@ class Items:
         new_item(RItem.LoruleCastleKeySmall04),
         new_item(RItem.LoruleCastleKeySmall05),
     ], 5)
+    Merge = ItemData(78, "Progressive Merge", Normal, progression | useful, [
+        new_item(RItem.Merge01),
+        new_item(RItem.Merge02),
+    ], 2)
     PendantOfPower = ItemData(None, "Pendant of Power", Prize, progression, [new_item(RItem.PendantOfPower)])
     PendantOfWisdom = ItemData(None, "Pendant of Wisdom", Prize, progression, [new_item(RItem.PendantOfWisdom)])
     PendantOfCourage = ItemData(None, "Pendant of Courage", Prize, progression, [new_item(RItem.PendantOfCourage)])

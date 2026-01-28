@@ -131,6 +131,7 @@ major_items: List[ItemData] = [
     Items.Lamp,
     Items.Sword,
     Items.Glove,
+    Items.Merge,
 ]
 
 NUM_GHOSTS = 58
