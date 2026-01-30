@@ -232,21 +232,23 @@ class ALBWWorld(World):
         if self.options.randomize_dungeon_prizes:
             prize_itempool = [item for item in self.pre_fill_items if item_table[item.name].itemtype == ItemType.Prize]
             prize_location_names = [loc.name for loc in all_locations if loc.loctype == LocationType.Prize]
-            self._initial_fill(prize_itempool, prize_location_names)
+            self._initial_fill([(prize_itempool, prize_location_names)])
 
         # randomize dungeon items
+        dungeon_items_and_locations = []
         for dungeon in dungeon_table:
             dungeon_itempool = [item for item in self.pre_fill_items if item_table[item.name] in dungeon.items]
             if dungeon.name == "Lorule Castle" and self.options.bow_of_light_in_castle:
                 dungeon_itempool.append(self.create_item(Items.BowOfLight.name))
             dungeon_location_names = [loc.name for loc in dungeon.locations if loc.name not in dungeon_item_excludes
                 and not (self.options.progression_bosses and loc.name in dungeon_bosses)]
-            self._initial_fill(dungeon_itempool, dungeon_location_names)
+            dungeon_items_and_locations.append((dungeon_itempool, dungeon_location_names))
+        self._initial_fill(dungeon_items_and_locations)
         
         # starting weapon
         if self.starting_weapon is not None:
             starting_weapon_itempool = [item for item in self.pre_fill_items if item.name == self.starting_weapon.name]
-            self._initial_fill(starting_weapon_itempool, starting_weapon_locations)
+            self._initial_fill([(starting_weapon_itempool, starting_weapon_locations)])
     
     def fill_slot_data(self) -> Dict[str, Any]:
         slot_data = self.options.as_dict(
@@ -288,17 +290,21 @@ class ALBWWorld(World):
         out_file_name = self.multiworld.get_out_file_name_base(self.player)
         patch.write(os.path.join(output_directory, f"{out_file_name}{patch.patch_file_ending}"))
     
-    def _initial_fill(self, itempool: List[Item], location_names: List[str]) -> None:
-        for item in itempool:
-            self.pre_fill_items.remove(item)
+    def _initial_fill(self, pools: List[Tuple[List[Item], List[str]]]) -> None:
+        for itempool, _ in pools:
+            for item in itempool:
+                self.pre_fill_items.remove(item)
         state = CollectionState(self.multiworld)
         for item in self.pre_fill_items:
-            state.collect(item)
-        state = sweep_from_pool(state, self.itempool)
-        locations = [loc for loc in self.multiworld.get_unfilled_locations(self.player) if loc.name in location_names]
-        self.random.shuffle(locations)
-        fill_restrictive(self.multiworld, state, locations, itempool,
-            single_player_placement=True, lock=True, allow_excluded=True, allow_partial=False)
+            state.collect(item, prevent_sweep=True)
+        all_location_names = [name for _, loc_names in pools for name in loc_names]
+        all_locations = [loc for loc in self.multiworld.get_locations(self.player) if loc.name in all_location_names]
+        state = sweep_from_pool(state, self.itempool, locations=all_locations)
+        for itempool, location_names in pools:
+            locations = [loc for loc in self.multiworld.get_unfilled_locations(self.player) if loc.name in location_names]
+            self.random.shuffle(locations)
+            fill_restrictive(self.multiworld, state, locations, itempool,
+                single_player_placement=True, lock=True, allow_excluded=True, allow_partial=False)
 
     def _convert_state(self, state: CollectionState) -> List[PyRandomizable]:
         randomizables = []
