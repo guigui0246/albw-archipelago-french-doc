@@ -608,7 +608,7 @@ dungeon_item_excludes: List[str] = [
 ]
 
 dungeon_bosses: List[str] = [
-    "[EP] Yuga (1)",
+    "[EP] Yuga (2)",
     "[HG] Margomill",
     "[TH] Moldorm",
     "[PD] Gemesaur King",
