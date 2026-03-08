@@ -1,7 +1,7 @@
 from typing import Dict, List, Optional
 from enum import Enum
 from BaseClasses import Item, ItemClassification
-from .Options import ALBWOptions, HintGhosts, LogicMode
+from .Options import ALBWOptions, HintGhosts, LogicMode, NiceItems
 from albwrandomizer import PyRandomizable, Item as RItem, Goal, Vane, new_item, new_goal, new_vane
 
 class ALBWItem(Item):
@@ -75,9 +75,12 @@ class ItemData:
     def is_event(self) -> bool:
         return self.code is None
     
-    def get_classification(self, options: ALBWOptions):
-        if self == Items.Mail and options.logic_mode in [LogicMode.option_adv_glitched, LogicMode.option_hell]:
+    def get_classification(self, options: ALBWOptions, num: Optional[int]):
+        if self == Items.Mail and options.logic_mode.value in \
+                                [LogicMode.option_adv_glitched, LogicMode.option_hell]:
             return progression
+        if self == Items.Maiamai and options.shuffle_maiamai_rewards:
+            return progression_deprioritized if not num or num < options.maiamai_limit.value or not options.maiamai_mayhem else filler
         if self == Items.HintGlasses and options.hint_ghosts == HintGhosts.option_glasses:
             return useful
         return self.classification
@@ -149,7 +152,108 @@ class Items:
     RupeePurple = ItemData(28, "Purple Rupee", Normal, filler, [new_item(RItem.RupeePurple01)], 20)
     RupeeSilver = ItemData(29, "Silver Rupee", Normal, filler, [new_item(RItem.RupeeSilver01)], 39)
     RupeeGold = ItemData(30, "Gold Rupee", Normal, filler, [new_item(RItem.RupeeGold01)], 9)
-    Maiamai = ItemData(31, "Maiamai", Normal, filler, [new_item(RItem.Maiamai001)], 100)
+    Maiamai = ItemData(31, "Maiamai", Normal, filler, [
+        new_item(RItem.Maiamai001),
+        new_item(RItem.Maiamai002),
+        new_item(RItem.Maiamai003),
+        new_item(RItem.Maiamai004),
+        new_item(RItem.Maiamai005),
+        new_item(RItem.Maiamai006),
+        new_item(RItem.Maiamai007),
+        new_item(RItem.Maiamai008),
+        new_item(RItem.Maiamai009),
+        new_item(RItem.Maiamai010),
+        new_item(RItem.Maiamai011),
+        new_item(RItem.Maiamai012),
+        new_item(RItem.Maiamai013),
+        new_item(RItem.Maiamai014),
+        new_item(RItem.Maiamai015),
+        new_item(RItem.Maiamai016),
+        new_item(RItem.Maiamai017),
+        new_item(RItem.Maiamai018),
+        new_item(RItem.Maiamai019),
+        new_item(RItem.Maiamai020),
+        new_item(RItem.Maiamai021),
+        new_item(RItem.Maiamai022),
+        new_item(RItem.Maiamai023),
+        new_item(RItem.Maiamai024),
+        new_item(RItem.Maiamai025),
+        new_item(RItem.Maiamai026),
+        new_item(RItem.Maiamai027),
+        new_item(RItem.Maiamai028),
+        new_item(RItem.Maiamai029),
+        new_item(RItem.Maiamai030),
+        new_item(RItem.Maiamai031),
+        new_item(RItem.Maiamai032),
+        new_item(RItem.Maiamai033),
+        new_item(RItem.Maiamai034),
+        new_item(RItem.Maiamai035),
+        new_item(RItem.Maiamai036),
+        new_item(RItem.Maiamai037),
+        new_item(RItem.Maiamai038),
+        new_item(RItem.Maiamai039),
+        new_item(RItem.Maiamai040),
+        new_item(RItem.Maiamai041),
+        new_item(RItem.Maiamai042),
+        new_item(RItem.Maiamai043),
+        new_item(RItem.Maiamai044),
+        new_item(RItem.Maiamai045),
+        new_item(RItem.Maiamai046),
+        new_item(RItem.Maiamai047),
+        new_item(RItem.Maiamai048),
+        new_item(RItem.Maiamai049),
+        new_item(RItem.Maiamai050),
+        new_item(RItem.Maiamai051),
+        new_item(RItem.Maiamai052),
+        new_item(RItem.Maiamai053),
+        new_item(RItem.Maiamai054),
+        new_item(RItem.Maiamai055),
+        new_item(RItem.Maiamai056),
+        new_item(RItem.Maiamai057),
+        new_item(RItem.Maiamai058),
+        new_item(RItem.Maiamai059),
+        new_item(RItem.Maiamai060),
+        new_item(RItem.Maiamai061),
+        new_item(RItem.Maiamai062),
+        new_item(RItem.Maiamai063),
+        new_item(RItem.Maiamai064),
+        new_item(RItem.Maiamai065),
+        new_item(RItem.Maiamai066),
+        new_item(RItem.Maiamai067),
+        new_item(RItem.Maiamai068),
+        new_item(RItem.Maiamai069),
+        new_item(RItem.Maiamai070),
+        new_item(RItem.Maiamai071),
+        new_item(RItem.Maiamai072),
+        new_item(RItem.Maiamai073),
+        new_item(RItem.Maiamai074),
+        new_item(RItem.Maiamai075),
+        new_item(RItem.Maiamai076),
+        new_item(RItem.Maiamai077),
+        new_item(RItem.Maiamai078),
+        new_item(RItem.Maiamai079),
+        new_item(RItem.Maiamai080),
+        new_item(RItem.Maiamai081),
+        new_item(RItem.Maiamai082),
+        new_item(RItem.Maiamai083),
+        new_item(RItem.Maiamai084),
+        new_item(RItem.Maiamai085),
+        new_item(RItem.Maiamai086),
+        new_item(RItem.Maiamai087),
+        new_item(RItem.Maiamai088),
+        new_item(RItem.Maiamai089),
+        new_item(RItem.Maiamai090),
+        new_item(RItem.Maiamai091),
+        new_item(RItem.Maiamai092),
+        new_item(RItem.Maiamai093),
+        new_item(RItem.Maiamai094),
+        new_item(RItem.Maiamai095),
+        new_item(RItem.Maiamai096),
+        new_item(RItem.Maiamai097),
+        new_item(RItem.Maiamai098),
+        new_item(RItem.Maiamai099),
+        new_item(RItem.Maiamai100),
+    ], 100)
     MonsterGuts = ItemData(32, "Monster Guts", Junk, filler, [new_item(RItem.MonsterGuts)], 12)
     MonsterHorn = ItemData(33, "Monster Horn", Junk, filler, [new_item(RItem.MonsterHorn)], 3)
     MonsterTail = ItemData(34, "Monster Tail", Junk, filler, [new_item(RItem.MonsterTail)], 4)

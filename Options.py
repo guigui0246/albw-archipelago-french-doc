@@ -57,6 +57,20 @@ class SuperItems(Toggle):
     """This shuffles a second progressive copy of the Lamp and Net into the general item pool."""
     display_name = "Super Items"
 
+class ShuffleMaiamaiRewards(Toggle):
+    """Choose whether to put items on Mother Maiamai. Has no effect if `nice_items` is set to vanilla.
+    Instead of trading Maiamai for items, Mother Maiamai gives you an item once you have the
+    required Ravio item and a certain number of Maiamai, controlled by `maiamai_limit`."""
+    display_name = "Shuffle Maiamai Rewards"
+
+class MaiamaiLimit(Range):
+    """When Mother Maiamai rewards are shuffled, this controls the maximum number of Maiamai
+    that can be required to get items from Mother Maiamai."""
+    display_name = "Maiamai Limit"
+    range_start = 0
+    range_end = 100
+    default = 50
+
 class LampAndNetAsWeapons(Toggle):
     """Treat the base Lamp and Net as damage-dealing weapons?
     - The red base Lamp and Net each deal 1/2 the damage of the Forgotten Sword (i.e. they're VERY BAD weapons).
@@ -200,6 +214,8 @@ class ALBWOptions(PerGameCommonOptions):
     pedestal_requirement: PedestalRequirement
     nice_items: NiceItems
     super_items: SuperItems
+    shuffle_maiamai_rewards: ShuffleMaiamaiRewards
+    maiamai_limit: MaiamaiLimit
     lamp_and_net_as_weapons: LampAndNetAsWeapons
     no_progression_enemies: NoProgressionEnemies
     assured_weapon: AssuredWeapon
@@ -232,7 +248,8 @@ def create_randomizer_settings(options: ALBWOptions) -> albwrandomizer.Settings:
     settings.yuganon_requirement = options.lorule_castle_requirement.value
     settings.dark_rooms_lampless = bool(options.dark_rooms_lampless.value)
     settings.dungeon_prize_shuffle = bool(options.randomize_dungeon_prizes.value)
-    settings.maiamai_limit = 100
+    settings.shuffle_maiamai_rewards = bool(options.shuffle_maiamai_rewards.value)
+    settings.maiamai_limit = options.maiamai_limit.value
     settings.maiamai_madness = bool(options.maiamai_mayhem.value)
     settings.super_items = bool(options.super_items.value)
     settings.lamp_and_net_as_weapons = bool(options.lamp_and_net_as_weapons.value)

@@ -8,10 +8,10 @@ from worlds.Files import APProcedurePatch, AutoPatchExtensionRegister
 from Patch import create_rom_file
 from Utils import Version, tuplize_version
 from settings import get_settings
+from .Hints import sanitize
 from .Items import item_table, APItem
 from .Options import ALBWOptions, create_randomizer_settings
-from albwrandomizer import ArchipelagoItem, ArchipelagoInfo, \
-    logging_on, randomize_pre_fill, set_custom_hints
+from albwrandomizer import ArchipelagoItem, ArchipelagoInfo, logging_on, randomize_pre_fill, set_custom_hints
 
 class PatchItemInfo:
     name: str
@@ -123,7 +123,7 @@ class ALBWPatchExtension(metaclass=AutoPatchExtensionRegister):
         # Load Archipelago info from the patch info
         archipelago_info = ArchipelagoInfo()
         archipelago_info.name = patch_info.player_name
-        archipelago_info.items = {loc_name: ArchipelagoItem(item.name, item.classification)
+        archipelago_info.items = {sanitize(loc_name): ArchipelagoItem(sanitize(item.name), item.classification)
                                     for loc_name, item in patch_info.items.items()}
 
         # Initialize seed info from the patch info

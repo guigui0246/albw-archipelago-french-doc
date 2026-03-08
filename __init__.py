@@ -98,12 +98,16 @@ class ALBWWorld(World):
     seed: Optional[int]
     seed_info: Optional[SeedInfo]
 
-    def create_item(self, name: str) -> ALBWItem:
+    def create_item(self, name: str, num: Optional[int] = None) -> ALBWItem:
         item_id = self.item_name_to_id[name] if name in self.item_name_to_id else None
-        return ALBWItem(name, item_table[name].get_classification(self.options), item_id, self.player)
+        if not self.options.maiamai_mayhem and name == Items.Maiamai.name:
+            item_id = None # if Maiamai are unshuffled, make them an "event" item
+        return ALBWItem(name, item_table[name].get_classification(self.options, num), item_id, self.player)
     
     def create_location(self, name: str, region: Region) -> ALBWLocation:
         loc_id = self.location_name_to_id[name] if name in self.location_name_to_id else None
+        if not self.options.maiamai_mayhem and location_table[name].loctype == LocationType.Maiamai:
+            loc_id = None
         return ALBWLocation(self.player, name, loc_id, region)
     
     def get_filler_item_name(self):
@@ -115,9 +119,15 @@ class ALBWWorld(World):
         return self.random.choice(filler_items)
     
     def generate_early(self) -> None:
+        if self.options.nice_items == NiceItems.option_vanilla and self.options.shuffle_maiamai_rewards:
+            print(f"Option shuffle_maiamai_rewards is not compatible with vanilla nice items. Turning off shuffle_maiamai_rewards for player {self.player_name}.")
+            self.options.shuffle_maiamai_rewards.value = False
+
         settings = create_randomizer_settings(self.options)
         archipelago_info = ArchipelagoInfo()
         archipelago_info.name = self.player_name
+
+        # try crack shuffle
         max_tries = 20
         for num_tries in range(max_tries + 1):
             if num_tries == max_tries:
@@ -213,8 +223,8 @@ class ALBWWorld(World):
             if item == self.starting_weapon:
                 self.pre_fill_items.append(self.create_item(item.name))
                 count -= 1
-            for _ in range(count):
-                self.itempool.append(self.create_item(item.name))
+            for num in range(count):
+                self.itempool.append(self.create_item(item.name, num))
         
         num_items = len(self.itempool) + len(self.pre_fill_items)
         num_locations = len(self.multiworld.get_unfilled_locations(self.player))
@@ -330,10 +340,13 @@ class ALBWWorld(World):
                 if loc.loctype == LocationType.Upgrade:
                     assert loc.default_item is not None
                     check_map[loc.name] = loc.default_item.name
-        else:
+        elif not self.options.shuffle_maiamai_rewards:
             for loc in all_locations:
                 if loc.loctype == LocationType.Upgrade:
                     check_map[loc.name] = Items.RupeeGreen.name
+        else:
+            check_map["Maiamai Great Spin"] = Items.RupeeGreen.name
+                
 
         # Fill in unrandomized minigames
         if self.options.minigames_excluded:
@@ -377,19 +390,23 @@ class ALBWWorld(World):
         return item.count
     
     def _get_location_item(self, location: LocationData) -> Optional[ItemData]:
-        # if location.loctype == LocationType.Upgrade and self.options.nice_mode:
-        #     return None
         if location.loctype == LocationType.Prize and self.options.randomize_dungeon_prizes:
             return None
         if location.loctype == LocationType.Vane:
             assert self.seed_info is not None
             assert location.default_item is not None and location.default_item.vane is not None
             return vane_to_item[self.seed_info.vane_map[location.default_item.vane]]
+        if location.loctype == LocationType.Upgrade and self.options.shuffle_maiamai_rewards:
+            return None
+        if location.loctype == LocationType.Maiamai and not self.options.maiamai_mayhem:
+            return Items.Maiamai
         return location.default_item
     
     def _is_unrandomized(self, location: LocationData) -> bool:
-        return (location.loctype == LocationType.Maiamai and not self.options.maiamai_mayhem) \
-            or location.loctype == LocationType.Upgrade \
+        return (location.loctype == LocationType.Maiamai and not self.options.maiamai_mayhem
+                                                        and not self.options.shuffle_maiamai_rewards) \
+            or (location.loctype == LocationType.Upgrade and not self.options.shuffle_maiamai_rewards) \
+            or (location.name == "Maiamai Great Spin" and self.options.shuffle_maiamai_rewards) \
             or (self.options.minigames_excluded and location.is_minigame())
     
     def _save_for_pre_fill(self, item: ItemData) -> bool:
