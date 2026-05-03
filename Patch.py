@@ -31,8 +31,8 @@ class PatchInfo:
     hints: List[str]
     bow_of_light_hint: str
 
-    cur_version: ClassVar[Version] = Version(0, 1, 5)
-    min_compatible_version: ClassVar[Version] = Version(0, 1, 3)
+    cur_version: ClassVar[Version] = Version(0, 2, 0)
+    min_compatible_version: ClassVar[Version] = Version(0, 2, 0)
 
     def __init__(
         self,
@@ -115,51 +115,59 @@ class ALBWPatchExtension(metaclass=AutoPatchExtensionRegister):
 
     @staticmethod
     def patch_albw(caller: ALBWProcedurePatch, rom: bytes, patch_name: str) -> bytes:
-        GAME_ID = "00040000000EC300"
+        try:
+            return patch_albw_inner(caller, rom, patch_name)
+        except Exception as e:
+            from tkinter.messagebox import showerror
+            showerror(message=str(e))
+            raise e
 
-        # Load patch info from the json file
-        patch_info = from_json(caller.get_file(patch_name))
+def patch_albw_inner(caller: ALBWProcedurePatch, rom: bytes, patch_name: str) -> bytes:
+    GAME_ID = "00040000000EC300"
 
-        # Load Archipelago info from the patch info
-        archipelago_info = ArchipelagoInfo()
-        archipelago_info.name = patch_info.player_name
-        archipelago_info.items = {sanitize(loc_name): ArchipelagoItem(sanitize(item.name), item.classification)
-                                    for loc_name, item in patch_info.items.items()}
+    # Load patch info from the json file
+    patch_info = from_json(caller.get_file(patch_name))
 
-        # Initialize seed info from the patch info
-        settings = create_randomizer_settings(patch_info.options)
-        seed_info = randomize_pre_fill(patch_info.seed, settings, archipelago_info)
-        check_map = {loc_name: item_table[item_name].progress[0] if item_name != "AP Item" else APItem
-            for loc_name, item_name in patch_info.check_map.items()}
-        seed_info.build_layout(check_map)
-        set_custom_hints(seed_info, patch_info.hints, patch_info.bow_of_light_hint)
+    # Load Archipelago info from the patch info
+    archipelago_info = ArchipelagoInfo()
+    archipelago_info.name = patch_info.player_name
+    archipelago_info.items = {sanitize(loc_name): ArchipelagoItem(sanitize(item.name), item.classification)
+                                for loc_name, item in patch_info.items.items()}
 
-        with tempfile.TemporaryDirectory() as output_directory:
-            # Create the patch
-            output_subdirectory = os.path.join(output_directory, f"tmp_apalbw_{caller.player}")
-            os.mkdir(output_subdirectory)
-            seed_info.patch(caller.rom_file, output_subdirectory)
+    # Initialize seed info from the patch info
+    settings = create_randomizer_settings(patch_info.options)
+    seed_info = randomize_pre_fill(patch_info.seed, settings, archipelago_info)
+    check_map = {loc_name: item_table[item_name].progress[0] if item_name != "AP Item" else APItem
+        for loc_name, item_name in patch_info.check_map.items()}
+    seed_info.build_layout(check_map)
+    set_custom_hints(seed_info, patch_info.hints, patch_info.bow_of_light_hint)
 
-            # Optionally install the patch
-            mod_path = getattr(get_settings().albw_settings, "mod_path", "")
-            if mod_path != "":
-                if os.path.exists(mod_path):
-                    try:
-                        albw_mod_path = os.path.join(mod_path, GAME_ID)
-                        if os.path.exists(albw_mod_path):
-                            shutil.rmtree(albw_mod_path)
-                        tmp_mod_path = os.path.join(output_subdirectory, GAME_ID)
-                        shutil.copytree(tmp_mod_path, albw_mod_path)
-                    except Exception as err:
-                        print(f"Error installing mod: {err}")
-                else:
-                    print(f"Could not install mod, path {mod_path} does not exist")
+    with tempfile.TemporaryDirectory() as output_directory:
+        # Create the patch
+        output_subdirectory = os.path.join(output_directory, f"tmp_apalbw_{caller.player}")
+        os.mkdir(output_subdirectory)
+        seed_info.patch(caller.rom_file, output_subdirectory)
 
-            # Put the patch in a zip file
-            output_path = os.path.join(output_directory, f"tmp_apalbw_{caller.player}.zip")
-            shutil.make_archive(output_subdirectory, "zip", output_subdirectory)
+        # Optionally install the patch
+        mod_path = getattr(get_settings().albw_settings, "mod_path", "")
+        if mod_path != "":
+            if os.path.exists(mod_path):
+                try:
+                    albw_mod_path = os.path.join(mod_path, GAME_ID)
+                    if os.path.exists(albw_mod_path):
+                        shutil.rmtree(albw_mod_path)
+                    tmp_mod_path = os.path.join(output_subdirectory, GAME_ID)
+                    shutil.copytree(tmp_mod_path, albw_mod_path)
+                except Exception as err:
+                    print(f"Error installing mod: {err}")
+            else:
+                print(f"Could not install mod, path {mod_path} does not exist")
 
-            # Output the contents of the zip file
-            with open(output_path, "rb") as output_file:
-                output = output_file.read()
-            return output
+        # Put the patch in a zip file
+        output_path = os.path.join(output_directory, f"tmp_apalbw_{caller.player}.zip")
+        shutil.make_archive(output_subdirectory, "zip", output_subdirectory)
+
+        # Output the contents of the zip file
+        with open(output_path, "rb") as output_file:
+            output = output_file.read()
+        return output

@@ -82,7 +82,6 @@ class ALBWClientContext(CommonContext):
     player_struct_ptr: int
     player_ptr: int
 
-    DATA_VERSION: int = 2
     AP_HEADER_LOCATION: int = 0x6fe5f8
     SAVES_LOCATION: int = 0x711de8
     EVENTS_LOCATION: int = 0x70b728
@@ -165,10 +164,6 @@ class ALBWClientContext(CommonContext):
     async def validate_rom(self) -> None:
         if (await self.interface.read(self.AP_HEADER_LOCATION, 4)) != b"ARCH":
             self.error("The running game was not patched with an Archipelago patch.")
-        elif (await self.interface.read_u32(self.AP_HEADER_LOCATION + 0x4)) < self.DATA_VERSION:
-            self.error("Version mismatch: update your albwrandomizer library and re-patch.")
-        elif (await self.interface.read_u32(self.AP_HEADER_LOCATION + 0x4)) > self.DATA_VERSION:
-            self.error("Version mismatch: update your apworld and restart the client.")
         else:
             name = await self.interface.read(self.AP_HEADER_LOCATION + 0x10, 0x40)
             end = name.find(0)
