@@ -80,7 +80,7 @@ class ItemData:
                                 [LogicMode.option_adv_glitched, LogicMode.option_hell]:
             return progression
         if self == Items.Maiamai and options.shuffle_maiamai_rewards:
-            return progression_deprioritized if not num or num < options.maiamai_limit.value or not options.maiamai_mayhem else filler
+            return progression_deprioritized if not num or num < options.maiamai_limit.value or not options.maiamai_mayhem else useful
         if self == Items.HintGlasses and options.hint_ghosts == HintGhosts.option_glasses:
             return useful
         return self.classification
