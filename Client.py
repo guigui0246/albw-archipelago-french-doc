@@ -67,7 +67,10 @@ class ALBWClientContext(CommonContext):
     minigame_flags: int
     course: int
     stage: int
+    new_stage: bool
+    inventory: List[int]
     ravio_scouted: bool
+    get_hints: bool
     to_hint: List[int]
     invalid: bool
     last_error: str
@@ -88,6 +91,7 @@ class ALBWClientContext(CommonContext):
     GAME_LOCATION: int = 0x709df8
     TASK_MAIN_GAME_VTABLE: int = 0x6d1db4
     PLAYER_SINGLETON_LOCATION: int = 0x0070FB60  
+    RAVIO_ITEM: List[int] = [4, 3, 11, 6, 2, 8, 9, 10, 7]
 
     def __init__(self, server_address: Optional[str], password: Optional[str]):
         super().__init__(server_address, password)
@@ -96,7 +100,12 @@ class ALBWClientContext(CommonContext):
         self.initial_delay = True
         self.slot_data = None
         self.course_flags = []
+        self.course = -1
+        self.stage = -1
+        self.new_stage = False
+        self.inventory = [0 for _ in range(45)]
         self.ravio_scouted = False
+        self.get_hints = False
         self.to_hint = []
         self.invalid = False
         self.last_error = ""
@@ -206,7 +215,8 @@ class ALBWClientContext(CommonContext):
                     bool(args["slot_data"]["death_link"])))
             self.server_connected = True
 
-        if cmd == "LocationInfo":
+        if cmd == "LocationInfo" and self.get_hints:
+            self.get_hints = False
             self.to_hint = [loc.location for loc in args["locations"]
                 if loc.flags & (ItemClassification.progression | ItemClassification.useful)]
     
@@ -223,8 +233,9 @@ class ALBWClientContext(CommonContext):
         self.event_flags_ptr = await self.interface.read_u32(self.EVENTS_LOCATION)
         self.course_flags_ptr = await self.interface.read_u32(self.COURSES_LOCATION)
         self.minigame_ptr = await self.interface.read_u32(self.MINIGAME_LOCATION)
+        self.game_ptr = await self.interface.read_u32(self.GAME_LOCATION)
         await self.get_player_ptrs()
-        if self.event_flags_ptr == 0 or self.course_flags_ptr == 0 or self.minigame_ptr == 0 \
+        if self.event_flags_ptr == 0 or self.course_flags_ptr == 0 or self.minigame_ptr == 0 or self.game_ptr == 0 \
            or self.player_ptr == 0 or self.player_ctrl_ptr == 0 or self.player_struct_ptr == 0 or self.player_singleton_ptr == 0:
             return False
         return True
@@ -260,6 +271,18 @@ class ALBWClientContext(CommonContext):
                              + (await self.interface.read(self.course_flags_ptr + course * 0x16c + 0x1a0, 0x10))
             save_course_flags = await self.interface.read(self.save_ptr + 0x560 + course * 0x40, 0x40)
             self.course_flags.append(bytes_or(cur_course_flags, save_course_flags))
+
+    async def read_stage(self) -> None:
+        course = (await self.interface.read(self.game_ptr + 0x18, 1))[0]
+        stage = await self.interface.read_u32(self.game_ptr + 0x1c)
+        self.new_stage = course != self.course or stage != self.stage
+        self.course = course
+        self.stage = stage
+
+    async def read_inventory(self) -> None:
+        player_object_ptr = await self.interface.read_u32(self.player_ptr + 0x10)
+        if player_object_ptr:
+            self.inventory = [await self.interface.read_u32(player_object_ptr + 0x434 + 4 * i) for i in range(45)]
 
     def check_flag(self, course: Optional[int], flag: int) -> bool:
         byte = flag >> 3
@@ -311,6 +334,9 @@ class ALBWClientContext(CommonContext):
                 "status": ClientStatus.CLIENT_GOAL,
             }])
 
+    async def scout_hints(self) -> None:
+        await self.read_stage()
+
         if not self.ravio_scouted and self.check_location(location_table["Ravio's Gift"]):
             ravio_locations = [loc.code + albw_base_id for loc in all_locations if loc.loctype == LocationType.Ravio]
             await self.send_msgs([{
@@ -318,8 +344,20 @@ class ALBWClientContext(CommonContext):
                 "create_as_hint": 0,
                 "locations": ravio_locations,
             }])
+            self.get_hints = True
             self.ravio_scouted = True
         
+        if self.new_stage and self.course == 4 and self.stage == 14:
+            await self.read_inventory()
+            maiamai_locations = [loc.code + albw_base_id for loc in all_locations if loc.loctype == LocationType.Upgrade]
+            seen_maiamai_locations = [code for i, code in enumerate(maiamai_locations[:9]) if self.inventory[self.RAVIO_ITEM[i]] != 0]
+            await self.send_msgs([{
+                "cmd": "LocationScouts",
+                "create_as_hint": 0,
+                "locations": seen_maiamai_locations,
+            }])
+            self.get_hints = True
+
         if self.to_hint:
             await self.send_msgs([{
                 "cmd": "LocationScouts",
@@ -424,6 +462,7 @@ async def game_watcher(ctx: ALBWClientContext) -> None:
                             if "DeathLink" in ctx.tags:
                                 await ctx.handle_deathlink()
                             await ctx.check_locations()
+                            await ctx.scout_hints()
                             await ctx.get_item()
                         else:
                             ctx.initial_delay = True
