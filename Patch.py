@@ -9,7 +9,7 @@ from Patch import create_rom_file
 from Utils import Version, tuplize_version
 from settings import get_settings
 from .Items import item_table, APItem
-from .Options import ALBWSpecificOptions, LogicMode, RandomizeDungeonPrizes, LoruleCastleRequirement, \
+from .Options import ALBWSpecificOptions, DeathLink, LogicMode, RandomizeDungeonPrizes, LoruleCastleRequirement, \
     PedestalRequirement, NiceItems, SuperItems, LampAndNetAsWeapons, NoProgressionEnemies, \
     AssuredWeapon, MaiamaiMayhem, InitialCrackState, CrackShuffle, MinigamesExcluded, \
     SkipBigBombFlower, TrialsRequired, OpenTrialsDoor, BowOfLightInCastle, WeatherVanes, \
@@ -58,6 +58,7 @@ class PatchInfo:
             "seed": self.seed,
             "player_name": self.player_name,
             "options": self.options.as_dict(
+                "death_link",
                 "logic_mode",
                 "randomize_dungeon_prizes",
                 "lorule_castle_requirement",
@@ -94,6 +95,7 @@ def from_json(json: str) -> PatchInfo:
         info["seed"],
         info["player_name"],
         ALBWSpecificOptions(
+            DeathLink(info["options"]["death_link"]),
             LogicMode(info["options"]["logic_mode"]),
             RandomizeDungeonPrizes(info["options"]["randomize_dungeon_prizes"]),
             LoruleCastleRequirement(info["options"]["lorule_castle_requirement"]),

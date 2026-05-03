@@ -247,6 +247,7 @@ class ALBWWorld(World):
     
     def fill_slot_data(self) -> Dict[str, Any]:
         slot_data = self.options.as_dict(
+            "death_link",
             "logic_mode",
             "lorule_castle_requirement",
             "pedestal_requirement",

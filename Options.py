@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Dict
-from Options import PerGameCommonOptions, Choice, Range, Toggle
+from Options import PerGameCommonOptions, Choice, Range, Toggle, DeathLink
 import albwrandomizer
 
 class LogicMode(Choice):
@@ -175,6 +175,7 @@ class Keysy(Choice):
 
 @dataclass
 class ALBWSpecificOptions:
+    death_link: DeathLink
     logic_mode: LogicMode
     randomize_dungeon_prizes: RandomizeDungeonPrizes
     lorule_castle_requirement: LoruleCastleRequirement
