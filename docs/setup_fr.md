@@ -3,7 +3,7 @@
 ## Software Nécessaire
 
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases).
-- Une ROM décryptée de A Link Between Worlds d'Amérique du Nord en `.3ds` jusqu'à la 0.1.3 et `.cci` à partir de la 0.1.4. Les instructions pour dump la ROM peuvent être trouvées (en anglais) [ici](https://wiki.hacks.guide/wiki/3DS:Dump_titles_and_game_cartridges). **Faîtes bien attention à selectionner "decrypt" lors du dump.** Si vous avez un fichier en `.cci` ou `.3ds` renommez le juste au format voulu et si vous avez un fichier en `.cia` utilisez [makerom.exe packagé dans ctrtool (attention installez makerom pas ctrtool)](https://github.com/3DSGuy/Project_CTR/releases) ou ce [script](https://github.com/davFaithid/CIA-to-3DS-Rom-Converter/releases)
+- Une ROM décryptée de A Link Between Worlds **d'Amérique du Nord** en `.3ds` jusqu'à la 0.1.3 et `.cci` à partir de la 0.1.4. Les instructions pour dump la ROM peuvent être trouvées (en anglais) [ici](https://wiki.hacks.guide/wiki/3DS:Dump_titles_and_game_cartridges). **Faîtes bien attention à selectionner "decrypt" lors du dump.** Si vous avez un fichier en `.cci` ou `.3ds` renommez le juste au format voulu et si vous avez un fichier en `.cia` utilisez [makerom.exe packagé dans ctrtool (attention installez makerom pas ctrtool)](https://github.com/3DSGuy/Project_CTR/releases) ou ce [script](https://github.com/davFaithid/CIA-to-3DS-Rom-Converter/releases)
 - Pour jouer sur émulateur: [Azahar](https://azahar-emu.org/pages/download/)
 - Pour jouer sur 3ds: [Luma3DS](https://3ds.hacks.guide/) et le [plugin.3gx](https://github.com/LittleCube-hax/albw-ap-plugin/releases/latest) de LittleCube.
 

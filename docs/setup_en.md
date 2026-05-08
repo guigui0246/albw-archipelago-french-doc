@@ -3,7 +3,7 @@
 ## Required Software
 
 - [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases).
-- A decrypted, North American A Link Between Worlds `.3ds` ROM until 0.1.3 and `.cci` ROM since 0.1.4. Instructions for dumping your ROM can be found [here](https://wiki.hacks.guide/wiki/3DS:Dump_titles_and_game_cartridges). **Make sure to select "decrypt" when dumping.** Note: if you need a `.cci` ROM, you can rename a `.3ds` ROM and vice versa. These files are identical, only the extension is different. If you have a `.cia` ROM then use [makerom.exe packaged into ctrtool (warning please install makerom not ctrtool)](https://github.com/3DSGuy/Project_CTR/releases) or this [script](https://github.com/davFaithid/CIA-to-3DS-Rom-Converter/releases)
+- A decrypted, **North American** A Link Between Worlds `.3ds` ROM until 0.1.3 and `.cci` ROM since 0.1.4. Instructions for dumping your ROM can be found [here](https://wiki.hacks.guide/wiki/3DS:Dump_titles_and_game_cartridges). **Make sure to select "decrypt" when dumping.** Note: if you need a `.cci` ROM, you can rename a `.3ds` ROM and vice versa. These files are identical, only the extension is different. If you have a `.cia` ROM then use [makerom.exe packaged into ctrtool (warning please install makerom not ctrtool)](https://github.com/3DSGuy/Project_CTR/releases) or this [script](https://github.com/davFaithid/CIA-to-3DS-Rom-Converter/releases)
 - To play on emulator: [Azahar](https://azahar-emu.org/pages/download/)
 - To play on 3ds: [Luma3DS](https://3ds.hacks.guide/) and LittleCube's [plugin.3gx](https://github.com/LittleCube-hax/albw-ap-plugin/releases/latest)
 
