@@ -87,3 +87,18 @@ flag_data = [
     (943, "vane_turtle_rock"),
     (944, "vane_death_mtn_lorule"),
 ]
+
+nice_items = [
+    (2, "nice_bombs"),
+    (3, "nice_boomerang"),
+    (4, "nice_bow"),
+    (6, "nice_hammer"),
+    (7, "nice_sand_rod"),
+    (8, "nice_fire_rod"),
+    (9, "nice_ice_rod"),
+    (10, "nice_tornado_rod"),
+    (11, "nice_hookshot"),
+]
+
+scoot_fruit_flag = "scoot_fruit"
+golden_bee_flag = "golden_bee"

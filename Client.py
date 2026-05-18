@@ -9,16 +9,13 @@ from .Citra import CitraInterface, CitraException
 from .Triple import TripleInterface, TripleException
 from .Locations import LocationData, LocationType, all_locations, location_table
 from .Items import item_code_table
-from .Data import flag_data
+from .Data import flag_data, nice_items, scoot_fruit_flag, golden_bee_flag
 from . import albw_base_id
 import time
 import Utils
 import random
 import os
 import logging
-
-DUMMY_SCOOT_FRUIT = 10000
-DUMMY_GOLDEN_BEE = 10001
 
 citra = CitraInterface()
 triple = TripleInterface()
@@ -74,6 +71,9 @@ class ALBWClientContext(CommonContext):
     minigame_flags: int
     messages: List[Any]
     server_storage_flags: Set[int]
+    shuffle_maiamai_rewards: bool
+    last_maiamai_count: int
+    maiamai_count: int
     course: int
     stage: int
     new_stage: bool
@@ -111,6 +111,9 @@ class ALBWClientContext(CommonContext):
         self.course_flags = []
         self.messages = []
         self.server_storage_flags = set()
+        self.shuffle_maiamai_rewards = False
+        self.last_maiamai_count = 0
+        self.maiamai_count = 0
         self.course = -1
         self.stage = -1
         self.new_stage = False
@@ -227,6 +230,8 @@ class ALBWClientContext(CommonContext):
             if "death_link" in args["slot_data"]:
                 Utils.async_start(self.update_death_link(
                     bool(args["slot_data"]["death_link"])))
+            if "shuffle_maiamai_rewards" in args["slot_data"]:
+                self.shuffle_maiamai_rewards = bool(args["slot_data"]["shuffle_maiamai_rewards"])
             self.server_connected = True
 
         if cmd == "LocationInfo" and self.get_hints:
@@ -305,6 +310,7 @@ class ALBWClientContext(CommonContext):
 
     async def read_inventory(self) -> None:
         self.inventory = [await self.interface.read_u32(self.player_ptr + 0x434 + 4 * i) for i in range(50)]
+        self.maiamai_count = int.from_bytes(await self.interface.read(self.player_ptr + 0x508, 1), "little")
 
     def check_flag(self, course: Optional[int], flag: int) -> bool:
         byte = flag >> 3
@@ -329,37 +335,29 @@ class ALBWClientContext(CommonContext):
         return False
 
     def check_locations(self) -> None:
-        to_send = {}
+        updated_flags = {}
         for flag, name in flag_data:
-            if self.check_flag(None, flag) and not flag in self.server_storage_flags:
-                self.server_storage_flags.add(flag)
-                to_send[name] = True
+            if self.check_flag(None, flag) and not name in self.server_storage_flags:
+                self.server_storage_flags.add(name)
+                updated_flags[name] = True
+        
+        for slot, name in nice_items:
+            if self.inventory[slot] == 3 and not name in self.server_storage_flags:
+                self.server_storage_flags.add(name)
+                updated_flags[name] = True
 
-        if self.inventory[16] != 0 and not DUMMY_SCOOT_FRUIT in self.server_storage_flags:
-            self.server_storage_flags.add(DUMMY_SCOOT_FRUIT)
-            to_send["scoot_fruit"] = True
+        if self.inventory[16] != 0 and not scoot_fruit_flag in self.server_storage_flags:
+            self.server_storage_flags.add(scoot_fruit_flag)
+            updated_flags[scoot_fruit_flag] = True
         
         has_golden_bee = False
         for slot in range(45, 50):
             if self.inventory[slot] == 7:
                 has_golden_bee = True
                 break
-        if has_golden_bee and not DUMMY_GOLDEN_BEE in self.server_storage_flags:
-            self.server_storage_flags.add(DUMMY_GOLDEN_BEE)
-            to_send["golden_bee"] = True
-
-        if len(to_send) > 0:
-            logger.debug("Updating flags " + ", ".join(to_send.keys()))
-            self.messages.append({
-                "cmd": "Set",
-                "key": f"albw_flags_{self.slot}",
-                "default": {},
-                "want_reply": False,
-                "operations": [{
-                    "operation": "update",
-                    "value": to_send,
-                }],
-            })
+        if has_golden_bee and not golden_bee_flag in self.server_storage_flags:
+            self.server_storage_flags.add(golden_bee_flag)
+            updated_flags[golden_bee_flag] = True
 
         checks = []
         for loc in all_locations:
@@ -368,6 +366,36 @@ class ALBWClientContext(CommonContext):
                 if code not in self.locations_checked:
                     self.locations_checked.add(code)
                     checks.append(code)
+                if loc.loctype == LocationType.Maiamai and not loc.name in self.server_storage_flags:
+                    self.server_storage_flags.add(loc.name)
+                    updated_flags[loc.name] = True
+
+        if len(updated_flags) > 0:
+            logger.debug("Updating flags " + ", ".join(updated_flags.keys()))
+            self.messages.append({
+                "cmd": "Set",
+                "key": f"albw_flags_{self.slot}",
+                "default": {},
+                "want_reply": False,
+                "operations": [{
+                    "operation": "update",
+                    "value": updated_flags,
+                }],
+            })
+
+        if self.maiamai_count != self.last_maiamai_count:
+            self.last_maiamai_count = self.maiamai_count
+            logger.debug(f"Updating maiamai count: {self.maiamai_count}")
+            self.messages.append({
+                "cmd": "Set",
+                "key": f"albw_maiamai_{self.slot}",
+                "default": 0,
+                "want_reply": False,
+                "operations": [{
+                    "operation": "replace",
+                    "value": self.maiamai_count,
+                }]
+            })
 
         if len(checks) > 0:
             self.messages.append({
@@ -394,7 +422,7 @@ class ALBWClientContext(CommonContext):
         
         if self.new_stage and self.course == 0 and self.stage == 15:
             merchant_locations = [22 + albw_base_id] # Street Merchant (Left)
-            if 197 in self.server_storage_flags: # check Shady Guy flag
+            if "shady_guy" in self.server_storage_flags:
                 merchant_locations.append(23 + albw_base_id) # Street Merchant (Right)
             self.messages.append({
                 "cmd": "LocationScouts",
@@ -403,7 +431,7 @@ class ALBWClientContext(CommonContext):
             })
             self.get_hints = True
 
-        if self.new_stage and self.course == 4 and self.stage == 14:
+        if self.shuffle_maiamai_rewards and self.new_stage and self.course == 4 and self.stage == 14:
             maiamai_locations = [loc.code + albw_base_id for loc in all_locations if loc.loctype == LocationType.Upgrade]
             seen_maiamai_locations = [code for i, code in enumerate(maiamai_locations[:9]) if self.inventory[self.RAVIO_ITEM[i]] != 0]
             self.messages.append({
