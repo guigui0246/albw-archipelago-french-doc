@@ -186,6 +186,10 @@ class ChestSizeMatchesContents(Toggle):
     Note: Some large chests will have a reduced hitbox to prevent negative gameplay interference."""
     display_name = "Chest Size Matches Contents"
 
+class ChangeFreestandingModels(Toggle):
+    """Replace freestanding item models (heart pieces, heart containers, small keys) with their randomized items."""
+    display_name = "Change Freestanding Models"
+
 class TreacherousTowerFloors(Range):
     """Choose how many floors the Treacherous Tower should have (2-66)."""
     display_name = "Treacherous Tower Floors"
@@ -233,6 +237,7 @@ class ALBWOptions(PerGameCommonOptions):
     swordless_mode: SwordlessMode
     hint_ghosts: HintGhosts
     chest_size_matches_contents: ChestSizeMatchesContents
+    change_freestanding_models: ChangeFreestandingModels
     treacherous_tower_floors: TreacherousTowerFloors
     purple_potion_bottles: PurplePotionBottles
     keysy: Keysy
@@ -267,6 +272,7 @@ def create_randomizer_settings(options: ALBWOptions) -> albwrandomizer.Settings:
     settings.boots_in_shop = False
     settings.assured_weapon = bool(options.assured_weapon.value)
     settings.chest_size_matches_contents = bool(options.chest_size_matches_contents.value)
+    settings.change_freestanding_models = bool(options.change_freestanding_models.value)
     settings.minigames_excluded = bool(options.minigames_excluded.value)
     settings.skip_big_bomb_flower = bool(options.skip_big_bomb_flower.value)
     settings.treacherous_tower_floors = options.treacherous_tower_floors.value
