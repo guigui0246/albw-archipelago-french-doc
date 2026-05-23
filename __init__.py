@@ -16,8 +16,8 @@ from .Items import ALBWItem, Items, ItemData, ItemType, all_items, item_table, v
     convenient_hyrule_vanes, convenient_lorule_vanes, hyrule_vanes, lorule_vanes
 from .Locations import ALBWLocation, LocationData, LocationType, all_locations, dungeon_table, location_table, \
     dungeon_bosses, dungeon_item_excludes, starting_weapon_locations
-from .Options import ALBWOptions, CrackShuffle, InitialCrackState, Keysy, LogicMode, NiceItems, WeatherVanes, \
-    create_randomizer_settings
+from .Options import ALBWOptions, CrackShuffle, InitialCrackState, LogicMode, NiceItems, WeatherVanes, \
+    SmallKeys, BigKeys, Compasses, create_randomizer_settings
 from .Patch import PatchInfo, PatchItemInfo, ALBWProcedurePatch
 from albwrandomizer import ArchipelagoInfo, Cracksanity, PyRandomizable, SeedInfo, randomize_pre_fill
 
@@ -374,9 +374,11 @@ class ALBWWorld(World):
             return 0
         if item == Items.Maiamai and not self.options.maiamai_mayhem:
             return 0
-        if item.itemtype == ItemType.SmallKey and self.options.keysy in [Keysy.option_small, Keysy.option_all]:
+        if item.itemtype == ItemType.SmallKey and self.options.small_keys == SmallKeys.option_remove:
             return 0
-        if item.itemtype == ItemType.BigKey and self.options.keysy in [Keysy.option_big, Keysy.option_all]:
+        if item.itemtype == ItemType.BigKey and self.options.big_keys == BigKeys.option_remove:
+            return 0
+        if item.itemtype == ItemType.Compass and self.options.compasses == Compasses.option_startwith:
             return 0
         if item == Items.Quake and self.options.initial_crack_state != InitialCrackState.option_closed:
             return 0
@@ -415,7 +417,7 @@ class ALBWWorld(World):
             or (self.options.minigames_excluded and location.is_minigame())
     
     def _save_for_pre_fill(self, item: ItemData) -> bool:
-        return item.is_dungeon_item() \
+        return item.is_dungeon_item(self.options) \
             or (item.itemtype == ItemType.Prize and bool(self.options.randomize_dungeon_prizes)) \
             or (item == Items.BowOfLight and bool(self.options.bow_of_light_in_castle))
     

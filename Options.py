@@ -71,6 +71,36 @@ class MaiamaiLimit(Range):
     range_end = 100
     default = 50
 
+class SmallKeys(Choice):
+    """Choose how to randomize small keys.
+    own_dungeons: Small keys are found in their own dungeons.
+    anywhere: (Keyos) Small keys can be found in any world.
+    remove: (Keysy) Small keys and the doors they lock are removed from the game."""
+    display_name = "Small Keys"
+    option_own_dungeons = 0
+    option_anywhere = 1
+    option_remove = 2
+
+class BigKeys(Choice):
+    """Choose how to randomize big keys.
+    own_dungeons: Big keys are found in their own dungeons.
+    anywhere: (Keyos) Big keys can be found in any world.
+    remove: (Keysy) Big keys and the doors they lock are removed from the game."""
+    display_name = "Big Keys"
+    option_own_dungeons = 0
+    option_anywhere = 1
+    option_remove = 2
+
+class Compasses(Choice):
+    """Choose how to randomize compasses.
+    own_dungeons: Compasses are found in their own dungeons.
+    anywhere: Compasses can be found in any world.
+    startwith: Start with the compass to every dungeon."""
+    display_name = "Small Keys"
+    option_own_dungeons = 0
+    option_anywhere = 1
+    option_startwith = 2
+
 class LampAndNetAsWeapons(Toggle):
     """Treat the base Lamp and Net as damage-dealing weapons?
     - The red base Lamp and Net each deal 1/2 the damage of the Forgotten Sword (i.e. they're VERY BAD weapons).
@@ -201,14 +231,6 @@ class PurplePotionBottles(Toggle):
     """Fills all Empty Bottles with a free Purple Potion."""
     display_name = "Purple Potion Bottles"
 
-class Keysy(Choice):
-    """This setting removes keys and locked doors from dungeons if enabled."""
-    display_name = "Keysy"
-    option_off = 0
-    option_small = 1
-    option_big = 2
-    option_all = 3
-
 @dataclass
 class ALBWOptions(PerGameCommonOptions):
     death_link: DeathLink
@@ -221,6 +243,9 @@ class ALBWOptions(PerGameCommonOptions):
     super_items: SuperItems
     shuffle_maiamai_rewards: ShuffleMaiamaiRewards
     maiamai_limit: MaiamaiLimit
+    small_keys: SmallKeys
+    big_keys: BigKeys
+    compasses: Compasses
     lamp_and_net_as_weapons: LampAndNetAsWeapons
     no_progression_enemies: NoProgressionEnemies
     assured_weapon: AssuredWeapon
@@ -240,7 +265,6 @@ class ALBWOptions(PerGameCommonOptions):
     change_freestanding_models: ChangeFreestandingModels
     treacherous_tower_floors: TreacherousTowerFloors
     purple_potion_bottles: PurplePotionBottles
-    keysy: Keysy
     start_inventory_from_pool: StartInventoryPool
 
     @classmethod
@@ -277,6 +301,7 @@ def create_randomizer_settings(options: ALBWOptions) -> albwrandomizer.Settings:
     settings.skip_big_bomb_flower = bool(options.skip_big_bomb_flower.value)
     settings.treacherous_tower_floors = options.treacherous_tower_floors.value
     settings.purple_potion_bottles = bool(options.purple_potion_bottles.value)
+    settings.start_with_compasses = options.compasses.value == Compasses.option_startwith
     settings.night_mode = False
     settings.user_exclusions = set()
 
@@ -334,13 +359,13 @@ def create_randomizer_settings(options: ALBWOptions) -> albwrandomizer.Settings:
     elif options.weather_vanes == WeatherVanes.option_all:
         settings.weather_vanes = albwrandomizer.WeatherVanes.All
 
-    if options.keysy == Keysy.option_off:
+    if options.small_keys != SmallKeys.option_remove and options.big_keys != BigKeys.option_remove:
         settings.keysy = albwrandomizer.Keysy.Off
-    elif options.keysy == Keysy.option_small:
+    elif options.small_keys == SmallKeys.option_remove and options.big_keys != BigKeys.option_remove:
         settings.keysy = albwrandomizer.Keysy.SmallKeysy
-    elif options.keysy == Keysy.option_big:
+    elif options.small_keys != SmallKeys.option_remove and options.big_keys == BigKeys.option_remove:
         settings.keysy = albwrandomizer.Keysy.BigKeysy
-    elif options.keysy == Keysy.option_all:
+    elif options.small_keys == SmallKeys.option_remove and options.big_keys == BigKeys.option_remove:
         settings.keysy = albwrandomizer.Keysy.AllKeysy
     
     if options.trials_required == 0:

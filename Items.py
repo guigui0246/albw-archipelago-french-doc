@@ -1,7 +1,7 @@
 from typing import Dict, List, Optional
 from enum import Enum
 from BaseClasses import Item, ItemClassification
-from .Options import ALBWOptions, HintGhosts, LogicMode, NiceItems
+from .Options import ALBWOptions, HintGhosts, LogicMode, NiceItems, SmallKeys, BigKeys, Compasses
 from albwrandomizer import PyRandomizable, Item as RItem, Goal, Vane, new_item, new_goal, new_vane
 
 class ALBWItem(Item):
@@ -69,8 +69,14 @@ class ItemData:
             return NotImplemented
         return self.name == other.name
     
-    def is_dungeon_item(self) -> bool:
-        return self.itemtype in [Compass, SmallKey, BigKey]
+    def is_dungeon_item(self, options: ALBWOptions) -> bool:
+        if self.itemtype == SmallKey:
+            return options.small_keys == SmallKeys.option_own_dungeons
+        if self.itemtype == BigKey:
+            return options.big_keys == BigKeys.option_own_dungeons
+        if self.itemtype == Compass:
+            return options.compasses == Compasses.option_own_dungeons
+        return False
     
     def is_event(self) -> bool:
         return self.code is None
