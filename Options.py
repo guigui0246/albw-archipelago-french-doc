@@ -88,7 +88,9 @@ class SmallKeys(Choice):
     display_name = "Small Keys"
     option_own_dungeons = 0
     option_anywhere = 1
+    alias_keyos = 1
     option_remove = 2
+    alias_keysy = 2
 
 class BigKeys(Choice):
     """Choose how to randomize big keys.
@@ -98,7 +100,9 @@ class BigKeys(Choice):
     display_name = "Big Keys"
     option_own_dungeons = 0
     option_anywhere = 1
+    alias_keyos = 1
     option_remove = 2
+    alias_keysy = 2
 
 class Compasses(Choice):
     """Choose how to randomize compasses.
