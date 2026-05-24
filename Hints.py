@@ -3,7 +3,7 @@ from typing import List, Tuple
 from BaseClasses import Item, LocationProgressType, MultiWorld
 from .Items import Items, ItemData, ItemType, item_table
 from .Locations import Dungeon, LocationType, dungeon_table
-from .Options import ALBWOptions, NiceItems
+from .Options import ALBWOptions, NiceItems, SuperItems
 
 charset = \
     " !\"#$%&'()*+,-./" \
@@ -183,7 +183,7 @@ def generate_hints(multiworld: MultiWorld, player: int, options: ALBWOptions, ra
             item_determiner = "A"
         if options.nice_items == NiceItems.option_shuffled and item_table[item.name].itemtype == ItemType.Ravio:
             item_determiner = "A"
-        if options.super_items and item.name == Items.Lamp.name:
+        if options.super_items == SuperItems.option_shuffled and item.name == Items.Lamp.name:
             item_determiner = "A"
         if item_determiner == "A" and item_name[0] in "AEIOU":
             item_determiner = "An"

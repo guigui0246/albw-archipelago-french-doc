@@ -16,8 +16,8 @@ from .Items import ALBWItem, Items, ItemData, ItemType, all_items, item_table, v
     convenient_hyrule_vanes, convenient_lorule_vanes, hyrule_vanes, lorule_vanes
 from .Locations import ALBWLocation, LocationData, LocationType, all_locations, dungeon_table, location_table, \
     dungeon_bosses, dungeon_item_excludes, starting_weapon_locations
-from .Options import ALBWOptions, CrackShuffle, InitialCrackState, LogicMode, NiceItems, WeatherVanes, \
-    SmallKeys, BigKeys, Compasses, create_randomizer_settings
+from .Options import ALBWOptions, CrackShuffle, InitialCrackState, LogicMode, NiceItems, SuperItems, \
+    WeatherVanes, SmallKeys, BigKeys, Compasses, create_randomizer_settings
 from .Patch import PatchInfo, PatchItemInfo, ALBWProcedurePatch
 from albwrandomizer import ArchipelagoInfo, Cracksanity, PyRandomizable, SeedInfo, randomize_pre_fill
 
@@ -386,10 +386,14 @@ class ALBWWorld(World):
             return 0
         if item == Items.Bracelet and self.options.initial_crack_state == InitialCrackState.option_progressive:
             return 0
-        if (item == Items.Lamp or item == Items.Net) and not self.options.super_items:
+        if (item == Items.Lamp or item == Items.Net) and self.options.super_items != SuperItems.option_shuffled:
             return 1
         if item.itemtype == ItemType.Ravio and self.options.nice_items != NiceItems.option_shuffled:
             return 1
+        if item.itemtype == ItemType.NiceUpgrade and self.options.nice_items != NiceItems.option_upgrades:
+            return 0
+        if item.itemtype == ItemType.SuperUpgrade and self.options.super_items != SuperItems.option_upgrades:
+            return 0
         if item == Items.BeeBadge and self.options.logic_mode == LogicMode.option_hell:
             return 0
         if item == Items.Sword and self.options.swordless_mode:

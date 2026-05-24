@@ -46,16 +46,25 @@ class NiceItems(Choice):
     """Choose how to handle Nice Items.
     vanilla: Nice Items are obtained as upgrades from Mother Maiamai.
     shuffled: Freely shuffles two progressive copies of each Ravio Item.
-    off: Removes Nice Items from the game."""
+    off: Removes Nice Items from the game.
+    upgrades: Shuffles upgrades for each Ravio item, which upgrade your item once you get it."""
     display_name = "Nice Items"
     option_vanilla = 0
     option_shuffled = 1
     option_off = 2
+    option_upgrades = 3
     default = 0
 
-class SuperItems(Toggle):
-    """This shuffles a second progressive copy of the Lamp and Net into the general item pool."""
+class SuperItems(Choice):
+    """Choose how to handle Super Items.
+    shuffled: Shuffles a second progressive copy of the Lamp and Net into the general item pool.
+    off: Removes Super Items from the game.
+    upgrades: Shuffles upgrades for the Lamp and Net, which upgrade your item once you get it."""
     display_name = "Super Items"
+    option_shuffled = 0
+    option_off = 1
+    option_upgrades = 2
+    default = 1
 
 class ShuffleMaiamaiRewards(Toggle):
     """Choose whether to put items on Mother Maiamai. Has no effect if `nice_items` is set to vanilla.
@@ -282,7 +291,6 @@ def create_randomizer_settings(options: ALBWOptions) -> albwrandomizer.Settings:
     settings.shuffle_maiamai_rewards = bool(options.shuffle_maiamai_rewards.value)
     settings.maiamai_limit = options.maiamai_limit.value
     settings.maiamai_madness = bool(options.maiamai_mayhem.value)
-    settings.super_items = bool(options.super_items.value)
     settings.lamp_and_net_as_weapons = bool(options.lamp_and_net_as_weapons.value)
     settings.ravios_shop = albwrandomizer.RaviosShop.Open
     settings.bow_of_light_in_castle = bool(options.bow_of_light_in_castle.value)
@@ -327,6 +335,15 @@ def create_randomizer_settings(options: ALBWOptions) -> albwrandomizer.Settings:
         settings.nice_items = albwrandomizer.NiceItems.Shuffled
     elif options.nice_items == NiceItems.option_off:
         settings.nice_items = albwrandomizer.NiceItems.Off
+    elif options.nice_items == NiceItems.option_upgrades:
+        settings.nice_items = albwrandomizer.NiceItems.Upgrades
+
+    if options.super_items == SuperItems.option_shuffled:
+        settings.super_items = albwrandomizer.SuperItems.Shuffled
+    elif options.super_items == SuperItems.option_off:
+        settings.super_items = albwrandomizer.SuperItems.Off
+    elif options.super_items == SuperItems.option_upgrades:
+        settings.super_items = albwrandomizer.SuperItems.Upgrades
 
     if options.initial_crack_state == InitialCrackState.option_closed:
         settings.cracks = albwrandomizer.Cracks.Closed
