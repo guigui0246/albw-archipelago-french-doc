@@ -176,6 +176,7 @@ def generate_hints(multiworld: MultiWorld, player: int, options: ALBWOptions, ra
     major_names = set([item.name for item in major_items])
     for location in multiworld.find_items_in_locations(major_names, player):
         item = location.item
+        assert item is not None
         item_name = item.name
         item_determiner = "The"
         if item_name.startswith("Progressive "):

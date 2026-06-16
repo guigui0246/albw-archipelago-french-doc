@@ -7,6 +7,8 @@ import tempfile
 import zipfile
 from Utils import local_path
 
+albw_base_id = 6242624000
+
 tmp_path = ""
 
 def get_temp_path():

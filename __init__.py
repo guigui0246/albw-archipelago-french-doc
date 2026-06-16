@@ -19,9 +19,8 @@ from .Locations import ALBWLocation, LocationData, LocationType, all_locations, 
 from .Options import ALBWOptions, CrackShuffle, InitialCrackState, LogicMode, NiceItems, SuperItems, \
     WeatherVanes, SmallKeys, BigKeys, Compasses, create_randomizer_settings
 from .Patch import PatchInfo, PatchItemInfo, ALBWProcedurePatch
+from .Utils import albw_base_id
 from albwrandomizer import ArchipelagoInfo, Cracksanity, PyRandomizable, SeedInfo, randomize_pre_fill
-
-albw_base_id = 6242624000
 
 def launch_client(*args):
     from .Client import launch
