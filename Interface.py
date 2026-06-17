@@ -18,7 +18,7 @@ class N3DSInterface:
     PACKET_VERSION: int = 1
     HEADER_SIZE: int = 0x10
     MAX_PACKET_SIZE: int = 0x410
-    TIMEOUT: float = 0.25
+    TIMEOUT: float = 1.0
 
     sock: socket.socket
     max_request_size: int

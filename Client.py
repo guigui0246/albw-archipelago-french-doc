@@ -546,7 +546,6 @@ async def game_watcher(ctx: ALBWClientContext) -> None:
                         await ctx.get_null_item()
         except ConnectionError as e:
             logger.error(e)
-            logger.error(traceback.format_exc())
             ctx.interface.disconnect()
             ctx.interface_connected = False
             ctx.last_error = ""
