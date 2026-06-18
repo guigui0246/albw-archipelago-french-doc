@@ -32,7 +32,7 @@ class PatchInfo:
     bow_of_light_hint: str
 
     cur_version: ClassVar[Version] = Version(0, 3, 0)
-    min_compatible_version: ClassVar[Version] = Version(0, 2, 0)
+    min_compatible_version: ClassVar[Version] = Version(0, 3, 0)
 
     def __init__(
         self,
