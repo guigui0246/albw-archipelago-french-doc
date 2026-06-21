@@ -66,6 +66,9 @@ class N3DSInterface:
             request_data = struct.pack("=II", start_process, 0x7fffffff)
             try:
                 response = await self._send_packet(RequestType.ProcessList, request_data)
+                if len(response) < 4:
+                    self.max_request_size = 32
+                    return True
                 count = struct.unpack("=I", response[0:4])[0]
                 if count == 0:
                     return False
