@@ -109,7 +109,7 @@ class Compasses(Choice):
     own_dungeons: Compasses are found in their own dungeons.
     anywhere: Compasses can be found in any world.
     startwith: Start with the compass to every dungeon."""
-    display_name = "Small Keys"
+    display_name = "Compasses"
     option_own_dungeons = 0
     option_anywhere = 1
     option_startwith = 2
